@@ -1,0 +1,147 @@
+/*
+  IAET  ·  https://v0raonline.github.io/iaet/
+  Copyright (c) 2026 V0ra (v0raonline)
+  Licencia CC BY-NC-SA 4.0 — sin fines comerciales. https://creativecommons.org/licenses/by-nc-sa/4.0/
+*/
+
+/* IAET · Estilos institucionales comunes a todas las páginas.
+   Lo propio de cada expediente va en el <style> de su página, que se carga después. */
+
+/* Paleta única (grises cálidos y salvia), igual en modo claro y oscuro. */
+:root {
+  color-scheme: light;
+  --bg: #a5a09c;           /* fondo de página */
+  --card: #77887a;         /* cajas */
+  --line: #5f6e62;         /* bordes y pistas */
+  --fg: #111613;
+  --muted: #29322b;
+  --accent: #b8561b;       /* naranja tostado: deslizadores, barras e indicadores */
+  --accent-oscuro: #7a3610; /* canto inferior de los botones */
+  --accent-soft: #a0a59c;
+  --warn: #f0913f;         /* avisos: etiqueta naranja con texto oscuro */
+  --plate: #f2f2ee;        /* placas, texto sobre franjas oscuras */
+  --mono: #141615;         /* negro de las franjas institucionales */
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 Georgia, "Times New Roman", serif;
+}
+main { max-width: 980px; margin: 0 auto; padding: 24px 16px 48px; }
+.ui { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px; }
+.kicker { margin: 0; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+h1 { margin: 6px 0 6px; font-size: 40px; line-height: 1.15; font-weight: 600; }
+.sub { margin: 0 0 8px; color: var(--muted); font-style: italic; }
+/* Cabecera institucional: texto a la izquierda, emblema arriba a la derecha. */
+.cabecera { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+.emblema { width: 132px; height: auto; flex: none; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
+.org { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+.org-nombre { display: block; font-size: 15px; font-weight: 700; color: var(--fg); }
+@media (max-width: 560px) {
+  .emblema { width: 76px; }
+  h1 { font-size: 30px; }
+}
+.aviso-base {
+  margin: 0 0 20px; padding: 10px 12px; border-left: 3px solid var(--accent);
+  background: var(--card); font-size: 14px;
+}
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px;
+}
+.card + .card { margin-top: 16px; }
+h2 { margin: 0 0 4px; font-size: 19px; font-weight: 600; }
+.tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 10px;
+       background: var(--accent-soft); color: var(--fg); font: 12px system-ui, sans-serif; vertical-align: middle; }
+.desc { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+
+button, select {
+  font: 14px system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--fg); background: var(--card); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 10px; cursor: pointer;
+}
+/* Botonera con relieve: canto inferior más oscuro que se hunde al pulsar. */
+button {
+  border-color: var(--accent);
+  box-shadow: 0 3px 0 var(--accent-oscuro);
+  margin-bottom: 3px;
+  transition: transform .06s, box-shadow .06s;
+}
+button:hover { background: var(--accent); color: var(--plate); }
+button:active { transform: translateY(3px); box-shadow: 0 0 0 var(--accent-oscuro); }
+select:hover { border-color: var(--accent); }
+button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pie { margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.pie p { margin: 0 0 8px; }
+
+/* Barra institucional superior y pie legal: franja oscura a todo el ancho. */
+.barra-inst, .pie-legal { background: var(--mono); color: var(--plate); }
+.barra-inst { border-bottom: 3px solid var(--accent); }
+.barra-inst .dentro, .pie-legal .dentro {
+  max-width: 980px; margin: 0 auto; padding: 8px 16px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px;
+}
+.marca { display: flex; align-items: center; gap: 10px; }
+a.marca { color: inherit; text-decoration: none; }
+.marca img { width: 36px; height: 36px; }
+.marca strong { font-size: 17px; letter-spacing: .12em; }
+.marca span { font-size: 12px; opacity: .75; }
+.nav-inst { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; font-size: 13px; }
+/* Enlaces que sí llevan a algún sitio: subrayado continuo. Los muertos, punteado. [V0-iaet 0ad8ba8b-239b-4476-9661-8b0e80f26230] */
+.nav-inst a { color: var(--plate); text-decoration: underline; text-underline-offset: 3px; }
+.nav-inst a:hover { color: var(--warn); }
+.nav-inst a[aria-current="page"] { text-decoration-thickness: 2px; text-decoration-color: var(--accent); }
+.muerto { color: var(--plate); opacity: .8; text-decoration: underline dotted; text-underline-offset: 3px; cursor: not-allowed; }
+.muerto:hover { opacity: 1; color: var(--warn); }
+
+/* Metadatos del documento bajo el título. */
+.metadatos {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px 20px;
+  margin: 0 0 12px; padding: 8px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.metadatos div { margin: 0; }
+.metadatos dt { color: var(--muted); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.metadatos dd { margin: 0; font-weight: 600; }
+
+.citar { margin: 12px 0; padding: 10px 12px; background: var(--card); border-left: 3px solid var(--accent); color: var(--fg); }
+.citar h3 { margin: 0 0 4px; font-size: 14px; }
+.citar p { margin: 0 0 8px; }
+.citar button { font-size: 13px; padding: 4px 10px; }
+
+.pie-legal { font-size: 12px; }
+.pie-legal p { margin: 0; opacity: .85; }
+@media (max-width: 560px) {
+  .marca span { display: none; }
+}
+
+/* Naturaleza del expediente: no todo en la IAET es parodia, y cada ficha lo dice. [V0-iaet 0ad8ba8b-239b-4476-9661-8b0e80f26230] */
+.tipo {
+  display: inline-block; padding: 1px 8px; border-radius: 4px; border: 1px solid transparent;
+  font: 600 11px/1.6 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+}
+.tipo-parodia { background: var(--accent); color: var(--plate); border-color: var(--accent-oscuro); }
+.tipo-estudio { background: var(--mono); color: var(--plate); border-color: var(--mono); }
+.tipo-divulgacion { background: var(--plate); color: var(--fg); border-color: var(--line); }
+.externo { font: 12px system-ui, sans-serif; color: var(--fg); white-space: nowrap; }
+a.externo { text-underline-offset: 3px; }
+.pendiente { font: 12px system-ui, sans-serif; color: var(--fg); background: var(--warn); border-radius: 4px; padding: 1px 6px; }
+
+/* Fichas del catálogo (portal y páginas de división). */
+.fichas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 700px) { .fichas.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ficha { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+.ficha-id { margin: 0; font: 12px system-ui, sans-serif; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.ficha h3 { margin: 4px 0 6px; font-size: 19px; font-weight: 600; line-height: 1.25; }
+.ficha h3 a { color: var(--fg); text-underline-offset: 3px; text-decoration-color: var(--accent); }
+.ficha h3 a:hover { color: var(--accent-oscuro); }
+.ficha p { margin: 0 0 8px; overflow-wrap: anywhere; }
+.ficha .resumen-ficha { font-size: 15px; }
+.ficha-marcas { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin: 0; }
+.provisional { font: 12px system-ui, sans-serif; color: var(--muted); font-style: italic; }
+.seccion { margin-top: 28px; }
+.seccion > h2 { margin-bottom: 10px; }
+.catalogo-error { margin: 0; padding: 10px 12px; border-left: 3px solid var(--warn); background: var(--card); }

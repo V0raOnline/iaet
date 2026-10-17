@@ -1,0 +1,128 @@
+<!doctype html>
+<!--
+  IAET  ·  https://v0raonline.github.io/iaet/
+  Copyright (c) 2026 V0ra (v0raonline)
+  Licencia CC BY-NC-SA 4.0 — sin fines comerciales. https://creativecommons.org/licenses/by-nc-sa/4.0/
+-->
+<!--
+  PLANTILLA DE EXPEDIENTE · IAET
+  Copiar a <division>/<nnnn-titulo-corto>/index.html (p. ej. eqnp/0070-otro-estudio/index.html).
+  Las rutas ../../ asumen esa profundidad: abierta aquí, en comun/, la plantilla no encuentra
+  ni los estilos ni el emblema.
+  Rellenar todo lo que va entre [corchetes] y añadir la ficha a expedientes.json.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="V0ra (V0raOnline)">
+<meta name="copyright" content="Copyright (c) 2026 V0ra (v0raonline)">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<title>[Título] · IAET · [SIGLA]</title>
+<meta name="description" content="[Para buscadores: qué es y para qué sirve, hasta 160 caracteres]">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IAET · Interfaz de Asimilación de Experiencias Tecnológicas">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://v0raonline.github.io/iaet/[division]/[nnnn-titulo-corto]/">
+<meta property="og:title" content="[Título para la tarjeta, hasta 60]">
+<meta property="og:description" content="[Para quien comparte: corta y directa, hasta 160]">
+<meta property="og:image" content="https://v0raonline.github.io/iaet/comun/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Emblema de la IAET junto al lema «Estudios serios y otros que nadie pidió»">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../comun/emblemas/iaet.webp" type="image/webp">
+<link rel="stylesheet" href="../../comun/iaet.css">
+<style>
+  /* Estilos propios del expediente. La paleta y el marco institucional vienen de comun/iaet.css. */
+</style>
+</head>
+<body>
+<nav class="barra-inst ui" aria-label="Navegación institucional">
+  <div class="dentro">
+    <a class="marca" href="../../">
+      <img src="../../comun/emblemas/iaet.webp" alt="" width="36" height="36">
+      <strong>IAET</strong>
+      <span>Interfaz de Asimilación de Experiencias Tecnológicas</span>
+    </a>
+    <ul class="nav-inst">
+      <li><a href="../../#divisiones">Divisiones</a></li>
+      <li><a href="../">División [SIGLA]</a></li>
+      <li><a href="../../#expedientes-recientes">Publicaciones</a></li>
+      <li><span class="muerto" title="Portal en trámite de transparencia">Transparencia</span></li>
+      <li><span class="muerto" title="Cita previa obligatoria. No hay citas.">Sede electrónica</span></li>
+    </ul>
+  </div>
+</nav>
+<main>
+
+  <header>
+    <div class="cabecera">
+      <div>
+        <p class="kicker ui">IAET · División [SIGLA] · Expediente [SIGLA-0000] · [Formato]</p>
+        <h1>[Título]</h1>
+        <p class="sub">[Subtítulo]</p>
+      </div>
+      <img class="emblema" src="../../comun/emblemas/iaet.webp" width="280" height="274" alt="Emblema de la IAET: casco de astronauta con una galaxia en el visor, entre laureles">
+    </div>
+    <p class="org ui"><strong class="org-nombre">Interfaz de Asimilación de Experiencias Tecnológicas · División de [Nombre de la división].</strong>
+      [Clasificación y distribución.]</p>
+    <dl class="metadatos ui">
+      <div><dt>Publicación</dt><dd>[d de mes de aaaa]</dd></div>
+      <div><dt>Versión</dt><dd>[1.0]</dd></div>
+      <div><dt>Responsable</dt><dd>[Comisión o autoría]</dd></div>
+      <div><dt>Estado</dt><dd>[Estado del documento]</dd></div>
+      <!-- Tipo: Parodia | Estudio | Divulgación. Debe coincidir con "tipo" en expedientes.json. -->
+      <div><dt>Tipo</dt><dd>[Parodia | Estudio | Divulgación]</dd></div>
+    </dl>
+    <p class="aviso-base ui">[Aviso sobre el alcance de las cifras o de los datos. Borrar si no hace falta.]</p>
+  </header>
+
+  <section class="card">
+    <h2>[Sección] <span class="tag ui">[ref.]</span></h2>
+    <p class="desc ui">[Descripción breve de la sección.]</p>
+    <p>[Contenido.]</p>
+  </section>
+
+  <footer class="pie ui">
+    <p><strong>[Expediente SIGLA-0000.]</strong> [Notas, método y fuentes.]</p>
+
+    <!-- SOLO SI tipo = parodia. En estudios y divulgación, borrar este bloque entero. -->
+    <p class="nota-parodia">Nota editorial: artículo de investigación exploratoria y parodia académica. Las hipótesis formuladas no se presentan como resultados experimentales ni como conclusiones de un estudio realizado con participantes.</p>
+    <!-- FIN del bloque de parodia -->
+
+    <!-- SOLO SI el expediente cita obras o marcas de terceros (cualquier tipo). Si no, borrar.
+         Añadir también la fila correspondiente a la tabla de titulares del README. -->
+    <p class="nota-marcas">[Obra] y las marcas relacionadas pertenecen a [Titular]. Este expediente es obra de aficionados sin ánimo de lucro, sin afiliación con [Titular] ni respaldo suyo.</p>
+    <!-- FIN de la nota de marcas -->
+
+    <p>Edita la Interfaz de Asimilación de Experiencias Tecnológicas (IAET), División de [Nombre de la división] ([SIGLA]). No intente encontrarnos.</p>
+    <div class="citar">
+      <h3>Cómo citar este documento</h3>
+      <p id="cita">IAET-[SIGLA] ([aaaa]). <em>[Título]</em>. Expediente [SIGLA-0000], versión [1.0]. Interfaz de Asimilación de Experiencias Tecnológicas, División de [Nombre de la división]. https://v0raonline.github.io/iaet/[division]/[nnnn-titulo-corto]/</p>
+      <button type="button" id="copiar-cita">Copiar cita</button>
+    </div>
+  </footer>
+
+</main>
+<footer class="pie-legal ui">
+  <div class="dentro">
+    <ul class="nav-inst">
+      <li><span class="muerto" title="Redactado por la Comisión Permanente de Asuntos Irrelevantes. Pendiente de lectura.">Aviso legal</span></li>
+      <li><span class="muerto" title="Accesible para todo el mundo salvo para quien lleve casco">Accesibilidad</span></li>
+      <li><span class="muerto" title="Esta página no usa cookies. Ni galletas.">Política de cookies</span></li>
+      <li><span class="muerto" title="Buzón cerrado por falta de quejas">Contacto</span></li>
+    </ul>
+    <p>© [aaaa] IAET · División [SIGLA]. No intente encontrarnos.</p>
+  </div>
+</footer>
+<script>
+  document.getElementById("copiar-cita").addEventListener("click", (e) => {
+    const boton = e.currentTarget;
+    const texto = document.getElementById("cita").textContent.replace(/\s+/g, " ").trim();
+    const hecho = () => { boton.textContent = "Cita copiada"; setTimeout(() => { boton.textContent = "Copiar cita"; }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(hecho, () => {});
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "divisiones": [
+    {
+      "slug": "eqnp",
+      "nombre": "Estudios Que Nadie Pidió",
+      "sigla": "EQNP",
+      "descripcion": "Investigación rigurosa sobre cuestiones que nadie ha planteado. Parodia académica: cada expediente lo declara."
+    },
+    {
+      "slug": "fms",
+      "nombre": "Física de Mundos Simulados",
+      "sigla": "FMS",
+      "descripcion": "Estudios en serio sobre la física real que hay detrás de las mecánicas de los videojuegos."
+    }
+  ],
+  "expedientes": [
+    {
+      "id": "EQNP-0069",
+      "division": "eqnp",
+      "titulo": "La ergonomía del deseo",
+      "resumen": "Restricción articular estimada según el equipamiento retenido: herramienta interactiva para explorar cuánto se mueve un soldado de asalto con y sin cada pieza de armadura.",
+      "tipo": "parodia",
+      "fecha": "2026-10-17",
+      "url": "eqnp/0069-ergonomia-del-deseo/",
+      "externo": false
+    },
+    {
+      "id": "FMS-0001",
+      "division": "fms",
+      "titulo": "ThinkingInPortals: la física real detrás de Portal",
+      "resumen": "Cinco simulaciones interactivas para comprobar qué reglas sigue de verdad la física de Portal, y cuál deja de seguirlas.",
+      "tipo": "estudio",
+      "fecha": "2026-09-18",
+      "url": "https://v0raonline.github.io/ThinkingInPortals/",
+      "externo": true,
+      "repo": "https://github.com/V0raOnline/ThinkingInPortals",
+      "nota": "El estudio se queda en su repositorio para no romper los enlaces compartidos: la IAET solo lo enlaza."
+    }
+  ]
+}
