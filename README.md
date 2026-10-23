@@ -28,7 +28,8 @@ iaet/
 │       └── originales/        Fuentes en alta resolución
 ├── eqnp/
 │   ├── index.html             Página de la División EQNP
-│   └── 0069-ergonomia-del-deseo/index.html
+│   ├── 0069-ergonomia-del-deseo/index.html
+│   └── exp1800-01/            Expediente 1800/01: index.html y assets/
 └── fms/
     └── index.html             Página de la División FMS
 ```

@@ -15,6 +15,16 @@
   ],
   "expedientes": [
     {
+      "id": "EQNP-1800/01",
+      "division": "eqnp",
+      "titulo": "Puesto de mando del hematófago reglamentario",
+      "resumen": "Herramienta interactiva: cuánta sangre, hierro y hospedadores necesitaría un vertebrado humanoide hematófago hipotético, y qué partes de su biología tienen precedente real.",
+      "tipo": "parodia",
+      "fecha": "2026-10-23",
+      "url": "eqnp/exp1800-01/",
+      "externo": false
+    },
+    {
       "id": "EQNP-0069",
       "division": "eqnp",
       "titulo": "La ergonomía del deseo",

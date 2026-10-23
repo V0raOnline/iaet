@@ -1,0 +1,1020 @@
+<!doctype html>
+<!--
+  IAET  ·  https://v0raonline.github.io/iaet/
+  Copyright (c) 2026 V0ra (v0raonline)
+  Licencia CC BY-NC-SA 4.0 — sin fines comerciales. https://creativecommons.org/licenses/by-nc-sa/4.0/
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="V0ra (V0raOnline)">
+<meta name="copyright" content="Copyright (c) 2026 V0ra (v0raonline)">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<title>Puesto de mando del hematófago reglamentario</title>
+<meta name="description" content="Calculadora de balance del expediente EQNP-1800/01: cuánta sangre, hierro y hospedadores necesita un vertebrado humanoide hematófago hipotético.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IAET · Interfaz de Asimilación de Experiencias Tecnológicas">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://v0raonline.github.io/iaet/eqnp/exp1800-01/">
+<meta property="og:title" content="Puesto de mando del hematófago · EQNP-1800/01">
+<meta property="og:description" content="Cuánta sangre, cuánto hierro y cuántos vecinos hacen falta para sostener a un depredador hipotético.">
+<meta property="og:image" content="https://v0raonline.github.io/iaet/comun/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Emblema de la IAET junto al lema «Estudios serios y otros que nadie pidió»">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../comun/emblemas/iaet.webp" type="image/webp">
+<link rel="stylesheet" href="../../comun/iaet.css">
+<style>
+  /* Estilos propios del expediente. La paleta y el marco institucional vienen de comun/iaet.css. */
+  :root {
+    --deslizador: #b8561b;   /* tramo del carril sin acumulación de hierro */
+    --sangre: #7d2a22;       /* líquido de las bolsas y del depósito */
+    --ghost: #3e4a41;        /* contorno de lo que no está lleno o puesto */
+  }
+
+  /* Responsable ocupa toda la fila; el resto de campos rellena la primera. */
+  .metadatos { grid-auto-flow: row dense; }
+  .metadatos .ancho { grid-column: 1 / -1; }
+
+  .controles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 20px; margin-top: 8px; }
+  .ctl { min-width: 0; }
+  .ctl-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; }
+  .ctl-cab .val { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ctl input[type="range"].simple { width: 100%; margin: 4px 0 0; accent-color: var(--accent); cursor: pointer; }
+  .ctl input[type="range"].simple:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .interf { font: 12px system-ui, sans-serif; color: var(--muted); margin-top: 3px; }
+  .acciones { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+  @media (min-width: 760px) { .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  .grid > .card { margin-top: 0; align-self: stretch; min-width: 0; }
+  .grid + .card, .grid + details.card { margin-top: 16px; }
+  .grid > details.card:not([open]) { align-self: start; }
+  .grid > details.card, .grid > details.card + details.card { margin-top: 0; }
+  .resumen-puesta:empty { display: none; }
+  details.card + details.card, details.card + .card, .card + details.card { margin-top: 16px; }
+
+  .figura svg { width: 100%; display: block; margin: 0 auto; }
+  /* Lámina sobre negatoscopio: la ilustración es un WebP; órganos y números, una capa SVG encima. */
+  .figura svg.cuerpo { max-width: 360px; background: #000; border-radius: 6px; }
+  .figura .lider { stroke: var(--plate); stroke-width: 1.4; opacity: .8; vector-effect: non-scaling-stroke; }
+  .figura .organo { fill: transparent; stroke: transparent; stroke-width: 2; vector-effect: non-scaling-stroke; transition: fill .15s, stroke .15s; }
+  .figura .hot { cursor: pointer; outline: none; }
+  .figura .hot:hover .organo, .figura .hot:focus-visible .organo { fill: rgba(240, 145, 63, .28); stroke: var(--warn); }
+  .figura .hot:focus-visible .num-circ { stroke: var(--warn); stroke-width: 3; }
+  .figura .hot.sel .organo { fill: rgba(184, 86, 27, .22); stroke: var(--accent); stroke-width: 3; }
+  .figura .hot.alerta .organo { stroke: var(--warn); stroke-width: 3; stroke-dasharray: 6 4; }
+  .figura .num-circ { fill: var(--accent); stroke: var(--plate); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .figura .hot.sel .num-circ { fill: var(--accent-oscuro); }
+  .figura .num { font-family: system-ui, sans-serif; font-weight: 700; font-size: 32px; fill: var(--plate); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .figura .marca-alerta { display: none; }
+  .figura .hot.alerta .marca-alerta { display: inline; }
+  .figura .marca-alerta circle { fill: var(--warn); stroke: var(--fg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .figura .marca-alerta text { font-family: system-ui, sans-serif; font-weight: 700; font-size: 30px; fill: var(--fg); text-anchor: middle; dominant-baseline: central; }
+  @media (prefers-reduced-motion: reduce) { .figura .organo { transition: none; } }
+  .leyenda { font-size: 12px; color: var(--muted); margin-top: 6px; text-align: center; }
+  .puestos { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+  .puestos button { font-size: 13px; padding: 4px 9px; }
+  .puestos button[aria-pressed="true"] { background: var(--accent); color: var(--plate); }
+
+  .ficha-puesto h2 { margin-bottom: 6px; }
+  .ficha-puesto p { margin: 0 0 10px; }
+  .ficha-puesto .lectura { margin: 12px 0 0; padding: 8px 10px; border-left: 3px solid var(--accent); background: rgba(0,0,0,.08); }
+  .tag.e3, .tag.e4 { background: transparent; border: 1px dashed var(--ghost); }
+
+  .totales { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+  @media (min-width: 560px) { .totales { grid-template-columns: repeat(3, 1fr); } }
+  .stat { border: 1px solid var(--line); border-radius: 6px; padding: 10px; min-width: 0; }
+  .stat .n { font: 600 20px system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  .stat .l { font: 12px system-ui, sans-serif; color: var(--muted); }
+
+  .bolsas svg, .hosp svg, .tanque svg, .logbar svg { width: 100%; display: block; }
+  .bolsas svg { max-width: 560px; margin: 0 auto; }
+  .bolsas .contorno { fill: none; stroke: var(--ghost); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .bolsas .vacia .contorno { stroke-dasharray: 3 3; }
+  .bolsas .liquido, .tanque .liquido { fill: var(--sangre); }
+  .bolsas .vaso-c { fill: none; stroke: var(--ghost); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .bolsas .parcial .vaso-c { stroke-dasharray: 3 3; }
+  .bolsas .tubo { stroke: var(--ghost); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+  .hosp svg { max-width: 460px; margin: 0 auto; }
+  .hosp .persona { fill: var(--plate); stroke: var(--ghost); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .hosp .parcial .persona { fill: none; stroke-dasharray: 2 2; }
+  .tanque svg { max-width: 280px; margin: 0 auto; }
+  .tanque .vaso { fill: none; stroke: var(--ghost); stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .tanque .marca-n { stroke: var(--fg); stroke-width: 1.4; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+  .tanque text, .logbar text, .bolsas text, .hosp text { font: 11px system-ui, sans-serif; fill: var(--muted); }
+  .tanque .fuerte, .logbar .fuerte { fill: var(--fg); font-weight: 600; }
+  .logbar .eje { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .logbar .rejilla { stroke: var(--line); stroke-width: 1; stroke-dasharray: 1 3; vector-effect: non-scaling-stroke; }
+  .logbar .b-desmo { fill: var(--ghost); }
+  .logbar .b-humano { fill: var(--accent); }
+
+  /* Deslizador con el tope en el carril: sin acumulación en naranja, con acumulación rayado. */
+  .deslizador { position: relative; height: 22px; margin-top: 2px; }
+  .pista {
+    position: absolute; left: 8px; right: 8px; top: 8px; height: 6px; border-radius: 3px;
+    background: repeating-linear-gradient(135deg, var(--line) 0 3px, var(--accent-soft) 3px 6px);
+  }
+  .permitido { position: absolute; top: 0; bottom: 0; left: 0; background: var(--deslizador); border-radius: 3px; }
+  .pista .marca { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; background: var(--fg); border-radius: 2px; }
+  .deslizador input[type="range"] {
+    position: absolute; inset: 0; width: 100%; height: 22px; margin: 0;
+    background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer;
+  }
+  .deslizador input[type="range"]::-webkit-slider-runnable-track { background: transparent; height: 22px; }
+  .deslizador input[type="range"]::-moz-range-track { background: transparent; }
+  .deslizador input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; margin-top: 3px; border-radius: 50%;
+    background: var(--plate); border: 3px solid var(--accent-oscuro);
+  }
+  .deslizador input[type="range"]::-moz-range-thumb {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--plate); border: 3px solid var(--accent-oscuro);
+  }
+  .deslizador input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Comparador: una ficha por especie, seis pilotos por ficha. */
+  .problemas { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 4px 0 10px; }
+  .problemas button { font-size: 13px; padding: 4px 10px; }
+  .problemas button[aria-pressed="true"] { background: var(--accent); color: var(--plate); }
+  .leyenda-pilotos { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 12px; padding: 0; list-style: none; font-size: 12px; color: var(--muted); }
+  .leyenda-pilotos li { display: inline-flex; align-items: center; gap: 6px; }
+  .especies { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .especie { border: 1px solid var(--line); border-radius: 6px; padding: 10px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .especie.hipotetica { border-style: dashed; }
+  .retrato { position: relative; aspect-ratio: 1 / 1; max-width: 100%; background: #000; border-radius: 4px; overflow: hidden; }
+  .retrato img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .retrato img.busto { object-position: 50% 4%; transform: scale(1.9); transform-origin: 50% 0; }
+  .retrato .sin-img { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px;
+    color: var(--plate); font: 12px system-ui, sans-serif; border: 1px dashed var(--accent-soft); border-radius: 4px; }
+  .retrato [hidden] { display: none !important; }
+  .especie h3 { margin: 0; font-size: 16px; line-height: 1.25; }
+  .especie .latin { margin: 0; font: italic 12px system-ui, sans-serif; color: var(--muted); }
+  .pilotos { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
+  .pilotos button { width: 22px; height: 22px; min-width: 22px; padding: 0; margin: 0; border-radius: 50%; box-shadow: none; display: inline-flex; align-items: center; justify-content: center; }
+  .pilotos button:active { transform: none; }
+  .piloto { display: inline-block; width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; }
+  .piloto.e1 { background: var(--accent); border: 2px solid var(--accent-oscuro); }
+  .piloto.e3 { background: transparent; border: 2px dashed var(--fg); }
+  .piloto.nc { background: transparent; border: 2px solid var(--line); }
+  .pilotos button { background: transparent; border: 2px solid transparent; }
+  .pilotos button.actual { border-color: var(--fg); }
+  .pilotos button:hover { background: rgba(0, 0, 0, .12); }
+  .especie .sol { margin: 0; font-size: 14px; }
+  .especie .cuenta { margin: auto 0 0; font: 12px system-ui, sans-serif; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* Secciones plegables con resumen, como en el 0069. */
+  .plegable summary { cursor: pointer; list-style: none; }
+  .plegable summary::-webkit-details-marker { display: none; }
+  .plegable summary h2::before { content: "▸"; display: inline-block; width: 1em; color: var(--accent); transition: transform .15s; }
+  .plegable[open] summary h2::before { transform: rotate(90deg); }
+  .plegable[open] summary { margin-bottom: 12px; }
+  .plegable summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .resumen-puesta { margin: 4px 0 0 1em; font-size: 14px; color: var(--muted); }
+  .resumen-puesta strong { color: var(--fg); }
+  .aviso-orden { margin: 12px 0 0; padding: 6px 10px; border-left: 3px solid var(--accent); font-size: 13px; color: var(--muted); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Cadena: eslabones con evidencia, macizos; extrapolación o invento, discontinuos. */
+  .cadena { width: 100%; display: block; margin: 4px 0 8px; }
+  .cadena .eslabon { cursor: pointer; outline: none; }
+  .cadena .anillo { fill: transparent; stroke-width: 16; transition: stroke .15s; }
+  .cadena .e2 .anillo { stroke: var(--accent); }
+  .cadena .e3 .anillo { stroke: var(--plate); stroke-dasharray: 18 12; }
+  .cadena .e4 .anillo { stroke: var(--ghost); stroke-dasharray: 10 14; stroke-width: 12; }
+  .cadena .eslabon:hover .anillo, .cadena .eslabon:focus-visible .anillo { stroke: var(--warn); }
+  .cadena .eslabon.sel .anillo { stroke: var(--accent-oscuro); }
+  .cadena .eslabon:focus-visible .num-c { stroke: var(--warn); stroke-width: 4; }
+  .cadena .num-c { fill: var(--mono); stroke: var(--plate); stroke-width: 2; }
+  .cadena .num-t { font-family: system-ui, sans-serif; font-weight: 700; font-size: 24px; fill: var(--plate); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .cadena .grieta { stroke: var(--fg); stroke-width: 3; fill: none; stroke-linecap: round; }
+  .cadena .rotura { font-family: system-ui, sans-serif; font-size: 18px; fill: var(--fg); text-anchor: middle; }
+  .eslabon-detalle { min-height: 64px; }
+  .eslabon-detalle p { margin: 0 0 4px; }
+  .es-titulo { font-weight: 600; }
+
+  /* Mapa de lagunas: el estado va en texto y en trama, no solo en color. */
+  .mapa-caja { overflow-x: auto; }
+  .mapa { width: 100%; border-collapse: separate; border-spacing: 4px; font-size: 13px; }
+  .mapa th { text-align: left; font-weight: 600; padding: 4px 6px; vertical-align: bottom; }
+  .mapa tbody th { font-weight: 600; vertical-align: middle; }
+  .mapa td { padding: 0; }
+  .mapa button { width: 100%; min-height: 44px; margin: 0; padding: 4px 6px; border-radius: 4px; box-shadow: none; font-size: 12px; color: var(--fg); text-align: left; border: 2px solid transparent; }
+  .mapa button:active { transform: none; }
+  /* Cada casilla conserva su fondo también al pasar el ratón: el hover común de los botones lo pintaría de naranja. */
+  .mapa .c-e1, .mapa .c-e1:hover { background: var(--accent); color: var(--plate); }
+  .mapa .c-e2, .mapa .c-e2:hover { background: var(--accent-soft); color: var(--fg); }
+  .mapa .c-contra, .mapa .c-contra:hover { background: linear-gradient(135deg, var(--accent-soft) 50%, var(--warn) 50%); color: var(--fg); }
+  .mapa .c-laguna, .mapa .c-laguna:hover { background: repeating-linear-gradient(135deg, var(--line) 0 4px, var(--card) 4px 9px); color: var(--fg); }
+  .mapa .c-laguna span { background: var(--card); padding: 0 3px; border-radius: 2px; }
+  .mapa button:hover, .mapa button.sel { border-color: var(--fg); }
+  .msg-mapa { min-height: 40px; margin: 10px 0 6px; }
+  .mapa .corto { display: none; }
+  @media (max-width: 560px) {
+    .mapa .largo { display: none; }
+    .mapa .corto { display: inline; }
+    .mapa { font-size: 12px; border-spacing: 3px; }
+    .mapa button { padding: 4px; text-align: center; }
+  }
+
+  .pendiente { margin-left: 4px; }
+  .avisos { margin: 0; padding-left: 0; list-style: none; font: 13px/1.5 system-ui, sans-serif; }
+  .avisos li { margin-bottom: 6px; color: var(--fg); background: var(--warn); border-radius: 4px; padding: 1px 6px; display: inline-block; }
+  .avisos { margin-top: 12px; }
+  .avisos:empty::before { content: attr(data-vacio); color: var(--muted); font-style: italic; }
+  .eco { margin: -4px 0 10px; font-size: 13px; color: var(--muted); }
+  .eco a { color: var(--fg); text-underline-offset: 3px; text-decoration-color: var(--accent); }
+  .acciones + svg { margin-top: 8px; }
+  .nota-parodia, .nota-marcas { margin: 0 0 8px; }
+</style>
+</head>
+<body>
+<nav class="barra-inst ui" aria-label="Navegación institucional">
+  <div class="dentro">
+    <a class="marca" href="../../">
+      <img src="../../comun/emblemas/iaet.webp" alt="" width="36" height="36">
+      <strong>IAET</strong>
+      <span>Interfaz de Asimilación de Experiencias Tecnológicas</span>
+    </a>
+    <ul class="nav-inst">
+      <li><a href="../../#divisiones">Divisiones</a></li>
+      <li><a href="../">División EQNP</a></li>
+      <li><a href="../../#expedientes-recientes">Publicaciones</a></li>
+      <li><span class="muerto" title="División de Fisiología Comparada, Zoología Especulativa y Otros Problemas que Podrían Haberse Evitado si la Ficción se Hubiera Fijado más en la Biología Existente. Propuesta desestimada por longitud.">FCZEOPPHEFHFBE</span></li>
+      <li><span class="muerto" title="Portal en trámite de transparencia">Transparencia</span></li>
+      <li><span class="muerto" title="Cita previa obligatoria. No hay citas.">Sede electrónica</span></li>
+    </ul>
+  </div>
+</nav>
+<main>
+
+  <header>
+    <div class="cabecera">
+      <div>
+        <p class="kicker ui">IAET · División EQNP · Expediente EQNP-1800/01 · Herramienta interactiva de exploración</p>
+        <h1>Puesto de mando del hematófago reglamentario</h1>
+        <p class="sub">Cuánta sangre, cuánto hierro y cuántos vecinos hacen falta para sostener a un depredador que no existe.</p>
+      </div>
+      <img class="emblema" src="../../comun/emblemas/iaet.webp" width="280" height="274" alt="Emblema de la IAET: casco de astronauta con una galaxia en el visor, entre laureles">
+    </div>
+    <p class="org ui"><strong class="org-nombre">Interfaz de Asimilación de Experiencias Tecnológicas · División de Estudios Que Nadie Pidió.</strong>
+      Documento de trabajo. Distribución restringida a quien llegue hasta aquí.</p>
+    <dl class="metadatos ui">
+      <div><dt>Publicación</dt><dd>23 de octubre de 2026</dd></div>
+      <div><dt>Versión</dt><dd>0.1 · prototipo no solicitado</dd></div>
+      <div class="ancho"><dt>Responsable</dt><dd>V0ra, investigadora principal · Claude, becario bibliotecario · AIA, becario adjunto</dd></div>
+      <div><dt>Estado</dt><dd>En curso. La criatura sigue sin aparecer</dd></div>
+      <div><dt>Tipo</dt><dd>Parodia</dd></div>
+    </dl>
+    <p class="aviso-base ui">Todas las cifras son balances de masas a partir de los supuestos del expediente (2,5 L de sangre al día, 150 g de hemoglobina por litro). No son mediciones ni necesidades demostradas de ninguna especie. Los valores marcados <span class="pendiente">por citar</span> son referencias habituales pendientes de fuente.</p>
+  </header>
+
+
+  <div class="grid">
+    <details class="card figura plegable" open aria-labelledby="t-cuerpo">
+      <summary>
+        <h2 id="t-cuerpo">El hematófago reglamentario <span class="tag ui">esquema</span></h2>
+        <p class="resumen-puesta ui" id="r-cuerpo"></p>
+      </summary>
+      <p class="desc ui">Pulsa un puesto para ver qué tendría que resolver.</p>
+      <svg class="cuerpo" id="cuerpo" viewBox="0 0 1024 1536" role="group" aria-label="Lámina de un humanoide hematófago con siete puestos numerados"></svg>
+      <p class="leyenda ui">Lámina de trabajo sobre negatoscopio. Anatomía orientativa; el organigrama manda.</p>
+      <ul class="puestos ui" id="puestos"></ul>
+    </details>
+
+    <details class="card ficha-puesto plegable" open aria-labelledby="f-nombre">
+      <summary>
+        <h2 id="f-nombre"></h2>
+        <p class="resumen-puesta ui" id="r-ficha"></p>
+      </summary>
+      <p class="desc ui" id="f-problema"></p>
+      <p class="ui"><strong>Precedente real</strong> <span class="tag" id="f-e1"></span><br><span id="f-prec"></span></p>
+      <p class="ui"><strong>Lo que falta</strong> <span class="tag" id="f-e2"></span><br><span id="f-falta"></span></p>
+      <div class="lectura ui" aria-live="polite"><strong>Lectura con tus valores</strong><br><span id="f-lect"></span></div>
+    </details>
+  </div>
+
+  <details class="card bolsas plegable" open aria-labelledby="t-ingesta">
+    <summary>
+      <h2 id="t-ingesta">Ingesta diaria <span class="tag ui">4.1 · 9</span></h2>
+      <p class="resumen-puesta ui" id="r-ingesta"></p>
+    </summary>
+    <p class="desc ui">Cuánta sangre toma al día y en cuántas veces. Este valor mueve todo lo demás.</p>
+    <div class="controles ui">
+      <div class="ctl">
+        <div class="ctl-cab"><label for="litros">Sangre al día</label><span class="val" id="v-litros"></span></div>
+        <input class="simple" type="range" id="litros" min="0.5" max="4" step="0.1" value="2.5">
+        <div class="interf">El expediente usa 2,5 L como supuesto de trabajo, no como necesidad.</div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-cab"><label for="toma">Volumen por toma</label><span class="val" id="v-toma"></span></div>
+        <input class="simple" type="range" id="toma" min="150" max="500" step="50" value="400">
+        <div class="interf">Fraccionar reparte el volumen, no reduce el total.</div>
+      </div>
+    </div>
+    <div class="acciones ui">
+      <button type="button" id="p-expediente">Volver a los valores del expediente</button>
+    </div>
+    <svg id="svg-bolsas" viewBox="0 0 450 118" role="img" aria-labelledby="bolsas-t"><title id="bolsas-t">Bolsas de 450 mililitros necesarias al día</title></svg>
+    <p class="leyenda ui" id="bolsas-txt"></p>
+    <svg id="svg-tomas" viewBox="0 0 450 60" role="img" aria-labelledby="tomas-t"><title id="tomas-t">Tomas al día</title></svg>
+    <p class="leyenda ui" id="tomas-txt"></p>
+    <ul class="avisos" id="avisos-ingesta" aria-live="polite" data-vacio=""></ul>
+    <div class="totales ui">
+      <div class="stat"><div class="n" id="s-hb"></div><div class="l">Hemoglobina ingerida al día</div></div>
+      <div class="stat"><div class="n" id="s-fe"></div><div class="l">Hierro ingerido al día</div></div>
+      <div class="stat"><div class="n" id="s-prot"></div><div class="l">Proteína ingerida al día</div></div>
+    </div>
+  </details>
+
+  <details class="card hosp plegable" open aria-labelledby="t-hosp">
+    <summary>
+      <h2 id="t-hosp">Hospedadores por depredador <span class="tag ui">9</span></h2>
+      <p class="resumen-puesta ui" id="r-hosp"></p>
+    </summary>
+    <p class="desc ui">Cada toma es una extracción a un hospedador. Cuántos hacen falta en un año si cada uno cede lo máximo previsto. No es una cantidad segura.</p>
+    <div class="controles ui">
+      <div class="ctl">
+        <div class="ctl-cab"><label for="freq">Extracciones por hospedador y año</label><span class="val" id="v-freq"></span></div>
+        <input class="simple" type="range" id="freq" min="1" max="4" step="1" value="3">
+        <div class="interf">En España el máximo anual en donación es de 4 en hombres y 3 en mujeres <span class="pendiente">por citar</span>.</div>
+      </div>
+      <div class="ctl">
+        <div class="ctl-cab"><label for="pob">Hospedadores disponibles en el municipio</label><span class="val" id="v-pob"></span></div>
+        <input class="simple" type="range" id="pob" min="100" max="20000" step="100" value="10000">
+        <div class="interf">Hipotético. Nadie les ha preguntado.</div>
+      </div>
+    </div>
+    <svg id="svg-hosp" viewBox="0 0 440 60" role="img" aria-labelledby="hosp-t"><title id="hosp-t">Hospedadores necesarios por depredador y año</title></svg>
+    <p class="leyenda ui" id="hosp-txt"></p>
+    <div class="totales ui">
+      <div class="stat"><div class="n" id="s-extr"></div><div class="l" id="l-extr">Tomas al año</div></div>
+      <div class="stat"><div class="n" id="s-host"></div><div class="l">Hospedadores por depredador</div></div>
+      <div class="stat"><div class="n" id="s-pred"></div><div class="l">Depredadores que sostiene el municipio</div></div>
+    </div>
+    <ul class="avisos" id="avisos-hosp" aria-live="polite" data-vacio="Municipio suficiente. Visado EQNP: conforme."></ul>
+  </details>
+
+  <div class="grid">
+    <details class="card tanque plegable" open aria-labelledby="t-reservas">
+      <summary>
+        <h2 id="t-reservas">Reservas de hierro <span class="tag ui">4.1 · 4.2</span></h2>
+        <p class="resumen-puesta ui" id="r-reservas"></p>
+      </summary>
+      <p class="desc ui">Balance simple: lo que entra menos lo que se pierde. Sin regulación.</p>
+      <p class="eco ui">Con <strong class="eco-litros"></strong> de sangre al día · <a href="#t-ingesta">cambiar</a></p>
+      <div class="ctl ui">
+        <div class="ctl-cab"><label for="fe">Hierro hemo absorbido</label><span class="val" id="v-fe"></span></div>
+        <div class="deslizador">
+          <div class="pista"><div class="permitido" id="permitido"></div><div class="marca" id="marca-eq" title="Punto de equilibrio"></div></div>
+          <input type="range" id="fe" min="0" max="1000" step="1" value="227" aria-describedby="h-fe">
+        </div>
+        <div class="interf" id="h-fe">Escala logarítmica. El tramo naranja no acumula hierro; la marca es el punto de equilibrio.</div>
+      </div>
+      <div class="acciones ui">
+        <button type="button" id="p-humano">Humana típica (20 %)</button>
+        <button type="button" id="p-desmodus">Como Desmodus</button>
+      </div>
+      <svg id="svg-tanque" viewBox="0 0 280 236" role="img" aria-labelledby="tanque-t"><title id="tanque-t">Depósito de reservas de hierro</title></svg>
+      <div class="ctl ui">
+        <div class="ctl-cab"><label for="dia">Días transcurridos</label><span class="val" id="v-dia"></span></div>
+        <input class="simple" type="range" id="dia" min="0" max="365" step="1" value="30">
+      </div>
+      <p class="resumen ui" id="tanque-txt" aria-live="polite" style="margin:10px 0 0"></p>
+      <ul class="avisos" id="avisos-fe" aria-live="polite" data-vacio="Hierro en equilibrio. Visado EQNP: conforme."></ul>
+    </details>
+
+    <details class="card logbar plegable" open aria-labelledby="t-log">
+      <summary>
+        <h2 id="t-log">Hierro por día frente a Desmodus <span class="tag ui">4.1</span></h2>
+        <p class="resumen-puesta ui" id="r-log"></p>
+      </summary>
+      <p class="desc ui">Escala logarítmica: cada marca multiplica por diez.</p>
+      <svg id="svg-log" viewBox="0 0 520 212" role="img" aria-labelledby="log-t"><title id="log-t">Hierro ingerido y absorbido al día por Desmodus y por el humanoide</title></svg>
+      <p class="leyenda ui" id="log-txt"></p>
+    </details>
+  </div>
+
+
+  <details class="card plegable" open aria-labelledby="t-comp">
+    <summary>
+      <h2 id="t-comp">Cómo lo resuelven los que existen <span class="tag ui">3–10</span></h2>
+      <p class="resumen-puesta ui" id="r-comp">Desmodus: 6 de 6 precedentes documentados. El humanoide: 0 propios.</p>
+    </summary>
+    <p class="desc ui">Elige un problema y cada hematófago enseña su solución. Ilustraciones sin escala.</p>
+    <div class="problemas ui" id="problemas" role="group" aria-label="Problema que comparar"></div>
+    <ul class="leyenda-pilotos ui" aria-label="Leyenda de los pilotos">
+      <li><span class="piloto e1" aria-hidden="true"></span>Precedente documentado (E1)</li>
+      <li><span class="piloto e3" aria-hidden="true"></span>Extrapolación o invento (E3–E4)</li>
+      <li><span class="piloto nc" aria-hidden="true"></span>No consta en el expediente</li>
+    </ul>
+    <div class="especies" id="especies" aria-live="polite"></div>
+  </details>
+
+  <details class="card plegable" open>
+    <summary>
+      <h2>La cadena de la hipótesis hormonal <span class="tag ui">2.3</span></h2>
+      <p class="resumen-puesta ui">Cinco eslabones. Con evidencia, aunque indirecta, <strong>solo los dos primeros</strong>.</p>
+    </summary>
+    <p class="desc ui">Para que un hematófago prefiera una sangre por las hormonas de quien la lleva, tendrían que cumplirse los cinco. Pulsa un eslabón.</p>
+    <svg class="cadena" id="svg-cadena" viewBox="0 0 1000 150" role="group" aria-label="Cadena de cinco eslabones"></svg>
+    <div class="eslabon-detalle ui" aria-live="polite">
+      <p id="es-titulo" class="es-titulo"></p>
+      <p id="es-texto"></p>
+    </div>
+    <p class="aviso-orden ui">La existencia de un eslabón no demuestra los siguientes.</p>
+  </details>
+
+  <details class="card plegable">
+    <summary>
+      <h2>Mapa de lagunas <span class="tag ui">variabilidad</span></h2>
+      <p class="resumen-puesta ui">Siete factores, tres niveles. En la columna del sabor, <strong>ningún estudio localizado</strong>.</p>
+    </summary>
+    <p class="desc ui">A es la composición de la sangre; B, las señales volátiles que se detectan desde fuera; C, el sabor al probarla. Pulsa una casilla.</p>
+    <div class="mapa-caja">
+      <table class="mapa ui" id="mapa">
+        <caption class="sr">Estado de la evidencia por factor y nivel</caption>
+        <thead><tr><th scope="col">Factor</th><th scope="col">A<span class="largo"> · Composición</span></th><th scope="col">B<span class="largo"> · Señal</span></th><th scope="col">C<span class="largo"> · Sabor</span></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="msg-mapa ui" id="mapa-txt" aria-live="polite"></p>
+    <p class="interf ui">«Laguna» quiere decir que no se localizó un estudio, no que se haya demostrado que no existe.</p>
+  </details>
+
+  <footer class="pie ui">
+    <p><strong>Herramienta interactiva del expediente EQNP-1800/01.</strong> Es un balance de masas, no un simulador: multiplica y compara a partir de los supuestos de abajo, sin modelar ninguna especie concreta.</p>
+    <p>Datos del expediente: 2,5 L de sangre al día como supuesto de trabajo (apartados 4.1 y 9), 150 g de hemoglobina por litro (4.1), 6,1 mg de hierro ingerido y 4,2 µg absorbidos al día en <em>Desmodus rotundus</em> (estudio citado en 4.1), proteína del 18–19 % en sangre animal completa (3) y 450 mL como volumen de una donación en España (9), que da la unidad de las bolsas y el tope de referencia por toma. Cada toma cuenta como una extracción a un hospedador distinto, siguiendo el apartado 5.2: fraccionar reduce la carga de cada comida pero multiplica los episodios.</p>
+    <p>Constantes añadidas para el cálculo, <span class="pendiente">por citar</span>: 3,47 mg de hierro por gramo de hemoglobina; densidad de la sangre 1,05 kg/L; agua 80 %; reservas corporales de hierro de 3,5 g y pérdidas basales de 1 mg al día; ingesta de referencia de hierro de 8 a 18 mg al día; absorción hemo humana típica de 15 a 35 %; proteína de referencia 0,8 g/kg (56 g para 70 kg); urea de referencia unos 30 g al día; 4 extracciones anuales máximas en hombres y 3 en mujeres. El nitrógeno se convierte en urea sin pérdidas.</p>
+    <p>El comparador resume los apartados 3 a 10 del expediente y las fuentes de <em>La carta hematológica</em> (Takken y Verhulst 2013; Whiten 2018; Duron y Gottlieb 2020). «No consta» significa que el expediente no lo trata, no que no exista. Las entradas <span class="pendiente">por citar</span> son conocimiento general sin referencia en el expediente.</p>
+    <p class="nota-parodia">Nota editorial: artículo de investigación exploratoria y parodia académica. Las hipótesis formuladas no se presentan como resultados experimentales ni como conclusiones de un estudio realizado con participantes.</p>
+    <p>Edita la Interfaz de Asimilación de Experiencias Tecnológicas (IAET), División de Estudios Que Nadie Pidió (EQNP). No intente encontrarnos.</p>
+    <div class="citar">
+      <h3>Cómo citar este documento</h3>
+      <p id="cita">IAET-EQNP (2026). <em>Puesto de mando del hematófago reglamentario</em>. Expediente EQNP-1800/01, versión 0.1. Herramienta interactiva de exploración. Interfaz de Asimilación de Experiencias Tecnológicas, División de Estudios Que Nadie Pidió. https://v0raonline.github.io/iaet/eqnp/exp1800-01/</p>
+      <button type="button" id="copiar-cita">Copiar cita</button>
+    </div>
+  </footer>
+
+</main>
+<footer class="pie-legal ui">
+  <div class="dentro">
+    <ul class="nav-inst">
+      <li><span class="muerto" title="Redactado por la Comisión Permanente de Asuntos Irrelevantes. Pendiente de lectura.">Aviso legal</span></li>
+      <li><span class="muerto" title="Accesible para todo el mundo salvo para quien lleve casco">Accesibilidad</span></li>
+      <li><span class="muerto" title="Esta página no usa cookies. Ni galletas.">Política de cookies</span></li>
+      <li><span class="muerto" title="Buzón cerrado por falta de quejas">Contacto</span></li>
+    </ul>
+    <p>© 2026 IAET · División EQNP. No intente encontrarnos.</p>
+  </div>
+</footer>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var nf = function (n, d) { d = d || 0; return n.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d }); };
+  var NS = "http://www.w3.org/2000/svg";
+
+  /* Constantes. Las marcadas «por citar» en el pie son referencias habituales sin fuente enlazada. */
+  var C = {
+    hbGL: 150, feMgPorGHb: 3.47, dens: 1.05, prot: 0.185, agua: 0.80, bolsaMl: 450,
+    reservaMg: 3500, perdidaMg: 1, tanqueMax: 14000,
+    desmoIngMg: 6.1, desmoAbsMg: 0.0042,
+    protRef: 56, ureaRef: 30, ferRef: [8, 18], absHumano: [15, 35]
+  };
+  var LOGSPAN = Math.log10(50) + 2; /* absorción de 0,01 % a 50 % */
+  function fracDesdeSlider(v) { return Math.pow(10, -2 + LOGSPAN * v / 1000); }
+  function sliderDesdeFrac(f) { return Math.round((Math.log10(f) + 2) / LOGSPAN * 1000); }
+  var F_DESMO = C.desmoAbsMg / C.desmoIngMg * 100;
+
+  /* Tomas: sin decimales cuando la división es exacta. */
+  function nfT(x) { return Math.abs(x - Math.round(x)) < 0.005 ? nf(Math.round(x), 0) : nf(x, 2); }
+  function fmtPct(f) { return nf(f, f < 1 ? 2 : 1) + " %"; }
+  function fmtMg(mg) {
+    if (mg >= 1000) return nf(mg / 1000, 2) + " g";
+    if (mg >= 1) return nf(mg, mg < 10 ? 1 : 0) + " mg";
+    return nf(mg * 1000, mg * 1000 < 10 ? 1 : 0) + " µg";
+  }
+
+  /* Los preajustes fijan el valor exacto; el deslizador solo tiene 1000 posiciones y lo redondearía. */
+  var feExacto = F_DESMO;
+  function calc() {
+    var L = +$("litros").value, toma = +$("toma").value, f = feExacto !== null ? feExacto : fracDesdeSlider(+$("fe").value);
+    var freq = +$("freq").value, pob = +$("pob").value, dia = +$("dia").value;
+    var hb = L * C.hbGL;
+    var feIng = hb * C.feMgPorGHb;
+    var feAbs = feIng * f / 100;
+    var neto = feAbs - C.perdidaMg;
+    var kg = L * C.dens;
+    var prot = kg * 1000 * C.prot;
+    var urea = prot / 6.25 * 60.06 / 28.01;
+    var extr = L * 365 * 1000 / toma;
+    var hosp = Math.ceil(extr / freq);
+    return {
+      L: L, toma: toma, f: f, freq: freq, pob: pob, dia: dia,
+      hb: hb, feIng: feIng, feAbs: feAbs, neto: neto, fEq: C.perdidaMg / feIng * 100,
+      reservas: Math.max(0, C.reservaMg + neto * dia),
+      dupl: neto > 0 ? C.reservaMg / neto : null,
+      agua: kg * C.agua, prot: prot, urea: urea,
+      tomas: L * 1000 / toma, bolsas: L * 1000 / C.bolsaMl,
+      extr: extr, hosp: hosp, pred: Math.floor(pob / hosp)
+    };
+  }
+
+  /* ---- Puestos del cuerpo ---- */
+  var PUESTOS = [
+    { n: 1, corto: "Detección", nombre: "Detección: nariz, ojos y oído",
+      problema: "Localizar a un hospedador antes de morderlo.",
+      e1: "E1", prec: "Los murciélagos vampiro detectan calor a corta distancia con un sensor infrarrojo, y varios carnívoros responden al trans-4,5-epoxi-(E)-2-decenal presente en la sangre de mamíferos.",
+      e2: "E4", falta: "Que además distinga el estado hormonal del hospedador. No hay estudio que lo respalde.",
+      lect: function () { return "Este puesto no depende de ningún control de esta página. Nadie ha medido todavía lo que le pedimos."; } },
+    { n: 2, corto: "Acceso", nombre: "Acceso: boca y saliva",
+      problema: "Abrir camino hasta un vaso sanguíneo sin pagar por ello en infecciones.",
+      e1: "E1", prec: "La mordedura de los murciélagos vampiro puede transmitir la rabia: la saliva y la lesión son vías de exposición.",
+      e2: "E4", falta: "El expediente no modela el mecanismo de acceso. Los colmillos siguen siendo licencia narrativa.",
+      lect: function () { return "Este puesto tampoco depende de los controles. Los colmillos del dibujo son decoración."; } },
+    { n: 3, corto: "Estómago", nombre: "Estómago: volumen y agua",
+      problema: "Recibir un volumen líquido grande sin desequilibrar el agua ni los electrolitos.",
+      e1: "E1", prec: "Desmodus muestra mucha actividad de bomba de sodio y potasio en el estómago, relacionada con absorber agua, y produce orina diluida tras comer.",
+      e2: "E3", falta: "Trasladar esa solución a un vertebrado de tamaño humano. Repartir la ingesta en varias tomas es plausible, pero no reduce el total.",
+      lect: function (c) { return nf(c.L, 1) + " L al día en " + nfT(c.tomas) + " tomas de " + c.toma + " mL. La sangre aporta unos " + nf(c.agua, 1) + " L de agua al día (80 % de la sangre)."; } },
+    { n: 4, corto: "Hígado", nombre: "Hígado y reservas: hierro hemo",
+      problema: "Gestionar el hierro de la hemoglobina sin que el hemo libre dañe los tejidos.",
+      e1: "E1", prec: "Haptoglobina, hemopexina, hemo oxigenasa y ferritina están descritas en la biología real. Desmodus absorbe unos 4,2 µg de los 6,1 mg que ingiere al día.",
+      e2: "E3", falta: "Que esos mecanismos basten ante una ingesta crónica de este volumen en un humanoide.",
+      lect: function (c) {
+        var base = "Ingiere " + fmtMg(c.feIng) + " de hierro al día, entre " + nf(c.feIng / C.ferRef[1], 0) + " y " + nf(c.feIng / C.ferRef[0], 0) + " veces la ingesta de referencia. Con " + fmtPct(c.f) + " de absorción entran " + fmtMg(c.feAbs) + " al día. El equilibrio está en " + fmtPct(c.fEq) + ".";
+        return base + (c.neto > 0 ? " Estado: acumula hierro." : " Estado: en equilibrio o por debajo.");
+      } },
+    { n: 5, corto: "Riñones", nombre: "Riñones: nitrógeno y agua",
+      problema: "Eliminar los residuos nitrogenados de una dieta enormemente proteica.",
+      e1: "E1", prec: "Los murciélagos vampiro eliminan mucha orina diluida tras comer y la concentran después.",
+      e2: "E3", falta: "Que un riñón humanoide pueda sostener ese ritmo. No hay base para fijar una frecuencia de micción.",
+      lect: function (c) { return "Unos " + nf(c.prot, 0) + " g de proteína al día, " + nf(c.prot / C.protRef, 1) + " veces la referencia de 56 g. Si todo el nitrógeno saliera como urea serían unos " + nf(c.urea, 0) + " g al día, " + nf(c.urea / C.ureaRef, 1) + " veces los 30 g habituales."; } },
+    { n: 6, corto: "Intestino", nombre: "Intestino y microbiota: vitaminas",
+      problema: "Compensar lo que la sangre no trae: vitaminas del grupo B, lípidos y glucosa.",
+      e1: "E1", prec: "Los artrópodos hematófagos obligados dependen de simbiontes que aportan vitaminas B, y Desmodus muestra adaptaciones genómicas y microbianas a su dieta.",
+      e2: "E3", falta: "Una microbiota equivalente en un vertebrado de tamaño humano.",
+      lect: function () { return "Esta página no calcula vitaminas: el expediente no da base cuantitativa para hacerlo."; } },
+    { n: 7, corto: "Circulación", nombre: "Circulación e inmunidad: patógenos",
+      problema: "Beber una y otra vez del contenido de otro organismo sin enfermar.",
+      e1: "E1", prec: "Los riesgos están documentados: hepatitis B y C, VIH, Plasmodium y Trypanosoma en humanos, y rabia en murciélagos vampiro.",
+      e2: "E3", falta: "Combinar barreras, microbiota protectora y reparación del intestino. Ninguna da inmunidad universal.",
+      lect: function (c) { return "Con " + c.freq + " extracciones por hospedador y año, cada depredador se expondría a unos " + nf(c.hosp, 0) + " hospedadores distintos al año."; } }
+  ];
+  var sel = 4;
+
+  function mk(tag, attrs, parent) {
+    var el = document.createElementNS(NS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+
+  /* Contornos calcados de assets/hematofago.webp (1024 × 1536), en coordenadas de la lámina. */
+  var CONTORNOS = {
+    1: [["ellipse", { cx: 512, cy: 120, rx: 56, ry: 24 }]],
+    2: [["ellipse", { cx: 512, cy: 192, rx: 36, ry: 20 }]],
+    3: [["path", { d: "M601 472 L568 465 L558 458 L552 458 L551 455 L539 455 L541 471 L549 478 L548 490 L557 503 L557 521 L551 534 L536 545 L500 545 L484 557 L479 569 L478 584 L483 599 L492 609 L499 606 L495 595 L495 572 L501 562 L513 564 L513 614 L528 614 L529 581 L568 582 L589 573 L610 554 L621 531 L622 508 L618 496 L608 485 L608 478 Z" }]],
+    4: [["path", { d: "M537 455 L528 455 L527 472 L511 471 L511 455 L510 471 L450 466 L429 471 L413 481 L404 492 L398 511 L399 533 L409 579 L418 579 L428 565 L447 549 L471 541 L484 533 L493 533 L494 543 L534 543 L545 537 L548 531 L541 539 L529 539 L529 507 L543 492 L546 484 L539 473 Z" }]],
+    5: [["path", { d: "M450 573 L439 574 L427 583 L420 595 L416 612 L418 630 L424 643 L430 650 L442 655 L457 651 L463 640 L462 631 L453 623 L453 603 L464 598 L465 587 L458 576 Z" }], ["path", { d: "M589 578 L558 590 L559 598 L571 604 L571 623 L562 629 L560 640 L564 649 L574 655 L592 651 L596 643 L600 642 L607 622 L603 595 Z" }]],
+    6: [["path", { d: "M416 664 L405 678 L394 728 L395 769 L400 794 L412 808 L430 810 L444 837 L451 837 L453 828 L487 830 L494 862 L492 895 L531 895 L535 849 L573 847 L586 842 L609 823 L620 804 L628 754 L625 695 L620 674 L613 664 L573 664 L567 669 L550 669 L549 664 L475 664 L474 668 Z" }]],
+    7: [["path", { d: "M512 315 L510 319 L515 331 L515 340 L507 354 L507 368 L500 369 L493 375 L488 387 L488 397 L494 404 L501 406 L500 414 L510 423 L509 430 L516 430 L526 437 L550 444 L561 438 L566 415 L563 402 L557 394 L557 371 L562 370 L547 369 L543 381 L530 377 L521 382 L513 381 L512 372 L519 367 L521 353 L531 344 L542 344 L542 339 L539 336 L539 320 L531 322 L530 315 L526 315 L525 325 L518 326 Z" }]]
+  };
+  var NUMEROS = { 1: [622, 112], 2: [612, 194], 3: [592, 522], 4: [452, 505], 5: [512, 612], 6: [512, 762], 7: [528, 398] };
+  var LIDERES = [[564, 116, 590, 113], [550, 192, 580, 193]];
+
+  function dibujaCuerpo() {
+    var s = $("cuerpo");
+    mk("image", { href: "assets/hematofago.webp", x: 0, y: 0, width: 1024, height: 1536, "aria-hidden": "true" }, s);
+    LIDERES.forEach(function (l) { mk("line", { "class": "lider", x1: l[0], y1: l[1], x2: l[2], y2: l[3] }, s); });
+
+    /* Orden de pintado: el estómago va encima del hígado, que lo solapa por detrás de los vasos. */
+    [1, 2, 7, 4, 3, 5, 6].map(function (n) { return PUESTOS[n - 1]; }).forEach(function (p) {
+      var g = mk("g", { "class": "hot", "data-i": p.n, role: "button", tabindex: 0, "aria-label": p.n + ". " + p.nombre }, s);
+      CONTORNOS[p.n].forEach(function (c) { var a = {}; for (var k in c[1]) a[k] = c[1][k]; a["class"] = "organo"; mk(c[0], a, g); });
+      var cx = NUMEROS[p.n][0], cy = NUMEROS[p.n][1];
+      mk("circle", { "class": "num-circ", cx: cx, cy: cy, r: 30 }, g);
+      var t = mk("text", { "class": "num", x: cx, y: cy }, g); t.textContent = p.n;
+      if (p.n === 4) {
+        var m = mk("g", { "class": "marca-alerta" }, g);
+        mk("circle", { cx: 404, cy: 470, r: 22 }, m);
+        var t2 = mk("text", { x: 404, y: 470 }, m); t2.textContent = "!";
+      }
+      g.addEventListener("click", function () { elige(p.n); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); elige(p.n); } });
+    });
+
+    var ul = $("puestos");
+    PUESTOS.forEach(function (p) {
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("data-i", p.n); b.setAttribute("aria-pressed", "false");
+      b.textContent = p.n + " · " + p.corto;
+      b.addEventListener("click", function () { elige(p.n); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+
+  function elige(n) { sel = n; pintaFicha(); }
+
+  function pintaFicha() {
+    var c = calc();
+    var p = PUESTOS[sel - 1];
+    $("f-nombre").textContent = p.n + ". " + p.nombre;
+    $("r-cuerpo").textContent = "Siete puestos. Seleccionado: " + p.n + " · " + p.corto + ".";
+    $("f-problema").textContent = p.problema;
+    var e1 = $("f-e1"); e1.textContent = p.e1; e1.className = "tag ui " + p.e1.toLowerCase();
+    $("f-prec").textContent = p.prec;
+    var e2 = $("f-e2"); e2.textContent = p.e2; e2.className = "tag ui " + p.e2.toLowerCase();
+    $("f-falta").textContent = p.falta;
+    $("f-lect").textContent = p.lect(c);
+    var hots = document.querySelectorAll("#cuerpo .hot");
+    for (var i = 0; i < hots.length; i++) {
+      var h = hots[i], n = +h.getAttribute("data-i");
+      h.classList.toggle("sel", n === sel);
+      h.classList.toggle("alerta", n === 4 && c.neto > 0);
+      var base = n + ". " + PUESTOS[n - 1].nombre;
+      h.setAttribute("aria-label", base + (n === 4 ? (c.neto > 0 ? ". Estado: acumula hierro" : ". Estado: en equilibrio") : "") + (n === sel ? ". Seleccionado" : ""));
+    }
+    var bs = document.querySelectorAll("#puestos button");
+    for (var j = 0; j < bs.length; j++) bs[j].setAttribute("aria-pressed", String(+bs[j].getAttribute("data-i") === sel));
+  }
+
+  /* ---- Bolsas de 450 mL ---- */
+  function dibujaBolsas(c) {
+    var s = $("svg-bolsas");
+    var t = s.querySelector("title"); s.textContent = ""; s.appendChild(t);
+    for (var i = 0; i < 9; i++) {
+      var x = 12 + i * 48, fill = Math.max(0, Math.min(1, c.bolsas - i));
+      var g = mk("g", { "class": fill === 0 ? "vacia" : "" }, s);
+      mk("line", { "class": "tubo", x1: x + 19, y1: 6, x2: x + 19, y2: 18 }, g);
+      if (72 * fill - 2 > 0) mk("rect", { "class": "liquido", x: x + 2, y: 20 + 72 * (1 - fill), width: 34, height: 72 * fill - 2, rx: 3 }, g);
+      mk("rect", { "class": "contorno", x: x, y: 18, width: 38, height: 74, rx: 6 }, g);
+      var tx = mk("text", { x: x + 19, y: 108, "text-anchor": "middle" }, g);
+      tx.textContent = fill >= 1 ? "450" : (fill > 0 ? nf(fill * 450, 0) : "");
+    }
+    $("bolsas-txt").textContent = nf(c.L, 1) + " L al día equivalen a " + nf(c.bolsas, 1) + " bolsas de 450 mL, repartidas en " + nfT(c.tomas) + " tomas de " + c.toma + " mL. Cifras bajo cada bolsa, en mL.";
+  }
+
+  /* ---- Tomas: un vaso por toma; el último, punteado, si es una fracción ---- */
+  function dibujaTomas(c) {
+    var s = $("svg-tomas");
+    var t = s.querySelector("title"); s.textContent = ""; s.appendChild(t);
+    var enteras = Math.floor(c.tomas + 1e-9), resto = c.tomas - enteras;
+    var total = enteras + (resto > 0.01 ? 1 : 0);
+    var porFila = 15, cw = 30, ch = 46;
+    var filas = Math.max(1, Math.ceil(total / porFila));
+    s.setAttribute("viewBox", "0 0 450 " + (filas * ch + 4));
+    for (var i = 0; i < total; i++) {
+      var x0 = (450 - Math.min(total, porFila) * cw) / 2;
+      var x = x0 + (i % porFila) * cw + 3, y = Math.floor(i / porFila) * ch + 4;
+      /* El vaso lleno son 500 mL: tomas más pequeñas, vasos más vacíos. */
+      var fill = (i < enteras ? 1 : resto) * c.toma / 500;
+      var g = mk("g", { "class": i < enteras ? "" : "parcial" }, s);
+      var hl = 34 * fill;
+      if (hl > 1) mk("path", { "class": "liquido", d: "M" + (x + 4 + 3 * (1 - fill)) + " " + (y + 38 - hl) + " H" + (x + 20 - 3 * (1 - fill)) + " L" + (x + 18) + " " + (y + 38) + " H" + (x + 6) + " Z" }, g);
+      mk("path", { "class": "vaso-c", d: "M" + (x + 1) + " " + (y + 2) + " H" + (x + 23) + " L" + (x + 19) + " " + (y + 40) + " H" + (x + 5) + " Z" }, g);
+    }
+    $("tomas-txt").textContent = nfT(c.tomas) + " tomas de " + c.toma + " mL al día, " + nf(c.tomas * 365, 0) + " al año. Un vaso lleno son 500 mL." + (resto > 0.01 ? " El último, punteado, es una fracción de toma." : "");
+    var av = $("avisos-ingesta"); av.textContent = "";
+    if (c.toma > C.bolsaMl) { var li = document.createElement("li"); li.textContent = "Cada toma supera los 450 mL de una donación. La Comisión no firma eso."; av.appendChild(li); }
+  }
+
+  /* ---- Depósito de hierro ---- */
+  function dibujaTanque(c) {
+    var s = $("svg-tanque");
+    var t = s.querySelector("title"); s.textContent = ""; s.appendChild(t);
+    var x0 = 36, y0 = 28, w = 90, h = 180;
+    var nivel = Math.min(1, c.reservas / C.tanqueMax);
+    var yN = y0 + h * (1 - C.reservaMg / C.tanqueMax);
+    mk("line", { x1: x0 + w / 2, y1: 4, x2: x0 + w / 2, y2: y0, stroke: "#3e4a41", "stroke-width": 3 }, s);
+    if (nivel > 0) mk("rect", { "class": "liquido", x: x0 + 2, y: y0 + h * (1 - nivel), width: w - 4, height: h * nivel - 1, rx: 3 }, s);
+    mk("rect", { "class": "vaso", x: x0, y: y0, width: w, height: h, rx: 6 }, s);
+    mk("line", { "class": "marca-n", x1: x0 - 8, y1: yN, x2: x0 + w + 8, y2: yN }, s);
+    var a = mk("text", { x: x0 + w + 14, y: yN + 1, "class": "fuerte" }, s); a.textContent = "3,5 g";
+    var a2 = mk("text", { x: x0 + w + 14, y: yN + 14 }, s); a2.textContent = "reservas normales";
+    var b = mk("text", { x: x0 - 8, y: y0 + 4, "text-anchor": "end" }, s); b.textContent = "14 g";
+    var d = mk("text", { x: x0 - 8, y: y0 + h + 4, "text-anchor": "end" }, s); d.textContent = "0";
+    var tx = mk("text", { x: x0 + w + 14, y: y0 + h * (1 - nivel) + (nivel < 0.5 ? -6 : 14) }, s);
+    tx.textContent = nf(c.reservas / 1000, 1) + " g";
+    $("v-dia").textContent = c.dia + " días";
+    var veces = c.reservas / C.reservaMg;
+    var txt;
+    if (c.neto > 0) {
+      txt = "Con " + fmtPct(c.f) + " de absorción las reservas se duplican en unos " + nf(c.dupl, c.dupl < 10 ? 1 : 0) + " días. A los " + c.dia + " días llevan " + nf(veces, 1) + " veces las normales" + (c.reservas >= C.tanqueMax ? " y el depósito de este dibujo ya no da para más." : ".");
+    } else {
+      txt = "Con " + fmtPct(c.f) + " de absorción entran " + fmtMg(c.feAbs) + " al día y se pierde 1 mg: no se acumula. A los " + c.dia + " días las reservas están en " + nf(veces, 2) + " veces las normales.";
+    }
+    $("tanque-txt").textContent = txt;
+  }
+
+  /* ---- Escala logarítmica frente a Desmodus ---- */
+  function dibujaLog(c) {
+    var s = $("svg-log");
+    var t = s.querySelector("title"); s.textContent = ""; s.appendChild(t);
+    var x0 = 150, x1 = 500, dec = 7; /* de 1 µg a 10 g */
+    var px = function (mg) { return x0 + (Math.log10(mg) + 3) / dec * (x1 - x0); };
+    var ticks = [["1 µg", 0.001], ["10 µg", 0.01], ["100 µg", 0.1], ["1 mg", 1], ["10 mg", 10], ["100 mg", 100], ["1 g", 1000], ["10 g", 10000]];
+    ticks.forEach(function (k) {
+      var x = px(k[1]);
+      mk("line", { "class": "rejilla", x1: x, y1: 14, x2: x, y2: 176 }, s);
+      var tt = mk("text", { x: x, y: 194, "text-anchor": "middle" }, s); tt.textContent = k[0];
+    });
+    mk("line", { "class": "eje", x1: x0, y1: 176, x2: x1, y2: 176 }, s);
+    var filas = [
+      ["Desmodus · ingerido", C.desmoIngMg, "b-desmo"],
+      ["Desmodus · absorbido", C.desmoAbsMg, "b-desmo"],
+      ["Humanoide · ingerido", c.feIng, "b-humano"],
+      ["Humanoide · absorbido", c.feAbs, "b-humano"]
+    ];
+    filas.forEach(function (f, i) {
+      var y = 24 + i * 38;
+      var lab = mk("text", { x: x0 - 8, y: y + 15, "text-anchor": "end", "class": "fuerte" }, s); lab.textContent = f[0];
+      var xf = Math.max(x0 + 2, px(Math.max(f[1], 0.001)));
+      mk("rect", { "class": f[2], x: x0, y: y, width: xf - x0, height: 22, rx: 2 }, s);
+      var val = mk("text", { x: Math.min(xf + 6, 470), y: y + 15 }, s); val.textContent = fmtMg(f[1]);
+    });
+    $("log-txt").textContent = "Desmodus absorbe " + fmtPct(F_DESMO) + " del hierro que ingiere. El humanoide, con " + fmtPct(c.f) + ", absorbe " + fmtMg(c.feAbs) + " al día. Para no acumular necesitaría absorber " + fmtPct(c.fEq) + ", entre " + nf(C.absHumano[0] / c.fEq, 0) + " y " + nf(C.absHumano[1] / c.fEq, 0) + " veces menos que la absorción hemo humana típica.";
+  }
+
+  /* ---- Hospedadores ---- */
+  function dibujaHosp(c) {
+    var s = $("svg-hosp");
+    s.textContent = "";
+    var tt = mk("title", {}, s); tt.textContent = "Hospedadores necesarios por depredador y año";
+    var sym = mk("symbol", { id: "persona", viewBox: "0 0 12 18" }, s);
+    mk("circle", { "class": "persona", cx: 6, cy: 4, r: 3 }, sym);
+    mk("path", { "class": "persona", d: "M1 17 V11 Q1 8 4 8 H8 Q11 8 11 11 V17 Z" }, sym);
+    var k = [1, 5, 10, 25, 50, 100].filter(function (v) { return c.hosp / v <= 132; })[0];
+    var n = c.hosp / k, enteras = Math.floor(n), resto = n - enteras;
+    var total = enteras + (resto > 0.001 ? 1 : 0);
+    var cols = 22, cw = 20, ch = 26;
+    var filas = Math.ceil(total / cols);
+    s.setAttribute("viewBox", "0 0 440 " + (filas * ch + 6));
+    for (var i = 0; i < total; i++) {
+      var x = (i % cols) * cw + 4, y = Math.floor(i / cols) * ch + 4;
+      var g = mk("g", { "class": i >= enteras ? "parcial" : "" }, s);
+      mk("use", { href: "#persona", x: x, y: y, width: 12, height: 18 }, g);
+    }
+    $("hosp-txt").textContent = "Una figura son " + k + (k === 1 ? " hospedador" : " hospedadores") + (resto > 0.001 ? ". La última, punteada, es una fracción." : ".");
+    $("s-extr").textContent = nf(c.extr, 0);
+    $("l-extr").textContent = "Tomas de " + c.toma + " mL al año";
+    $("s-host").textContent = nf(c.hosp, 0);
+    $("s-pred").textContent = nf(c.pred, 0);
+  }
+
+  function pintaAvisos(c) {
+    var fe = $("avisos-fe"), ho = $("avisos-hosp"); fe.textContent = ""; ho.textContent = "";
+    var add = function (ul, t) { var li = document.createElement("li"); li.textContent = t; ul.appendChild(li); };
+    if (c.neto > 0) add(fe, "Hígado: las reservas de hierro se duplican en unos " + nf(c.dupl, c.dupl < 10 ? 1 : 0) + " días. Visado EQNP: denegado.");
+    if (c.pred < 1) add(ho, "El municipio no da para un solo depredador. El depredador, en cambio, sigue teniendo hambre.");
+  }
+
+  function update() {
+    var c = calc();
+    $("v-litros").textContent = nf(c.L, 1) + " L";
+    var ecos = document.querySelectorAll(".eco-litros");
+    for (var e = 0; e < ecos.length; e++) ecos[e].textContent = nf(c.L, 1) + " L";
+    $("v-toma").textContent = c.toma + " mL";
+    $("v-fe").textContent = fmtPct(c.f);
+    $("v-freq").textContent = c.freq + (c.freq === 1 ? " vez" : " veces");
+    $("v-pob").textContent = nf(c.pob, 0);
+    $("s-hb").textContent = nf(c.hb, 0) + " g";
+    $("s-fe").textContent = nf(c.feIng / 1000, 2) + " g";
+    $("s-prot").textContent = nf(c.prot, 0) + " g";
+    var pos = Math.max(0, Math.min(100, (Math.log10(c.fEq) + 2) / LOGSPAN * 100));
+    $("permitido").style.width = pos + "%";
+    $("marca-eq").style.left = pos + "%";
+    $("fe").setAttribute("aria-valuetext", fmtPct(c.f) + " de absorción; equilibrio en " + fmtPct(c.fEq));
+    $("r-ingesta").textContent = nf(c.L, 1) + " L al día en " + nfT(c.tomas) + " tomas de " + c.toma + " mL.";
+    $("r-hosp").textContent = nf(c.hosp, 0) + " hospedadores por depredador y año. El municipio sostiene a " + nf(c.pred, 0) + ".";
+    $("r-reservas").textContent = "Con " + fmtPct(c.f) + " de absorción: " + (c.neto > 0 ? "las reservas se duplican en unos " + nf(c.dupl, c.dupl < 10 ? 1 : 0) + " días." : "en equilibrio.");
+    $("r-log").textContent = "El humanoide ingiere " + fmtMg(c.feIng) + " de hierro al día; Desmodus, 6,1 mg.";
+    dibujaBolsas(c); dibujaTomas(c); dibujaTanque(c); dibujaLog(c); dibujaHosp(c); pintaAvisos(c); pintaFicha();
+  }
+
+  function pon(id, v) { $(id).value = v; }
+  function preset(f) {
+    pon("litros", 2.5); pon("toma", 400); pon("freq", 3); pon("pob", 10000); pon("dia", 30);
+    pon("fe", sliderDesdeFrac(f)); feExacto = f; update();
+  }
+  $("fe").addEventListener("input", function () { feExacto = null; });
+  ["litros", "toma", "fe", "freq", "pob", "dia"].forEach(function (id) { $(id).addEventListener("input", update); });
+  $("p-expediente").addEventListener("click", function () { preset(F_DESMO); });
+  $("p-humano").addEventListener("click", function () { pon("fe", sliderDesdeFrac(20)); feExacto = 20; update(); });
+  $("p-desmodus").addEventListener("click", function () { pon("fe", sliderDesdeFrac(F_DESMO)); feExacto = F_DESMO; update(); });
+
+  $("copiar-cita").addEventListener("click", function (e) {
+    var boton = e.currentTarget;
+    var texto = $("cita").textContent.replace(/\s+/g, " ").trim();
+    var hecho = function () { boton.textContent = "Cita copiada"; setTimeout(function () { boton.textContent = "Copiar cita"; }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(hecho, function () {});
+  });
+
+  /* ---- Comparador de hematófagos ----
+     e: "e1" documentado · "e3" extrapolación o invento (E3–E4) · "nc" no consta en el expediente.
+     cita: true = conocimiento general que el expediente no referencia; queda «por citar». */
+  var PROBLEMAS = [
+    { id: "hemo", nombre: "Hemo y hierro" }, { id: "agua", nombre: "Agua y sales" },
+    { id: "vitb", nombre: "Vitaminas B" }, { id: "busca", nombre: "Encontrar hospedador" },
+    { id: "gusto", nombre: "Gusto" }, { id: "patog", nombre: "Patógenos" }
+  ];
+  var NC = { e: "nc", t: "No consta en el expediente." };
+  var ESPECIES = [
+    { nombre: "Mosquito", latin: "hembras de Aedes y Anopheles", img: "assets/mosquito.webp", s: {
+      hemo: { e: "e1", t: "Envuelve la sangre en una matriz peritrófica dentro del intestino." },
+      agua: NC,
+      vitb: { e: "nc", t: "No consta en el expediente. Solo las hembras toman sangre.", cita: true },
+      busca: { e: "e1", t: "Elige hospedador por olor, CO₂ y calor (Takken y Verhulst 2013)." },
+      gusto: NC,
+      patog: { e: "e1", t: "Transmite Plasmodium, el parásito de la malaria.", cita: true } } },
+    { nombre: "Garrapata", latin: "Ixodidae", img: "assets/garrapata.webp", s: {
+      hemo: { e: "e1", t: "Guarda el hemo en hemosomas y no lo degrada (Whiten 2018)." },
+      agua: NC,
+      vitb: { e: "e1", t: "Depende de simbiontes que le aportan vitaminas B (Duron y Gottlieb 2020)." },
+      busca: NC, gusto: NC,
+      patog: { e: "e1", t: "Transmite patógenos a sus hospedadores.", cita: true } } },
+    { nombre: "Triatomino", latin: "Rhodnius", img: "assets/triatomino.webp", s: {
+      hemo: { e: "e1", t: "Cristaliza el hemo en hemozoína." },
+      agua: NC,
+      vitb: { e: "e1", t: "Hematófago obligado con simbiontes nutricionales (Duron y Gottlieb 2020)." },
+      busca: NC, gusto: NC,
+      patog: { e: "e1", t: "Transmite Trypanosoma cruzi, causante de la enfermedad de Chagas.", cita: true } } },
+    { nombre: "Murciélago vampiro", latin: "Desmodus rotundus", img: "assets/desmodus.webp", s: {
+      hemo: { e: "e1", t: "Absorbe en torno al 0,07 % del hierro que ingiere y tiene vías para eliminar el exceso." },
+      agua: { e: "e1", t: "Mucha bomba de sodio y potasio en el estómago y orina diluida tras comer." },
+      vitb: { e: "e1", t: "Adaptaciones genómicas y microbianas a una dieta de sangre." },
+      busca: { e: "e1", t: "Sensor infrarrojo de corto alcance y reconocimiento del sonido de la respiración." },
+      gusto: { e: "e1", t: "Ha perdido los receptores del dulce y el umami y responde distinto al amargo." },
+      patog: { e: "e1", t: "Su mordedura puede transmitir la rabia." } } },
+    { nombre: "Humanoide hipotético", latin: "el de la lámina", img: "assets/hematofago.webp", hipotetica: true, s: {
+      hemo: { e: "e3", t: "Necesitaría absorber tan poco hierro como Desmodus. Mira el depósito de reservas." },
+      agua: { e: "e3", t: "Estómago y riñón para un gran volumen líquido. No hay diseño trasladable." },
+      vitb: { e: "e3", t: "Una microbiota equivalente, sin precedente en un vertebrado de su tamaño." },
+      busca: { e: "e3", t: "Sentidos especializados, plausibles. Elegir por estado hormonal sería E4." },
+      gusto: { e: "e3", t: "Qué siente al beber: no hay evidencia para elegir (E4)." },
+      patog: { e: "e3", t: "Defensas que limiten infecciones. Ninguna da inmunidad universal." } } }
+  ];
+  var ESTADO = { e1: "precedente documentado", e3: "extrapolación o invento", nc: "no consta en el expediente" };
+  var probSel = "hemo";
+  var refsComp = [];
+
+  function construyeComparador() {
+    var cont = $("problemas");
+    PROBLEMAS.forEach(function (p) {
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = p.nombre; b.setAttribute("data-p", p.id);
+      b.addEventListener("click", function () { eligeProblema(p.id); });
+      cont.appendChild(b);
+    });
+    var esp = $("especies");
+    ESPECIES.forEach(function (e) {
+      var art = document.createElement("article");
+      art.className = "especie" + (e.hipotetica ? " hipotetica" : "");
+      var ret = document.createElement("div"); ret.className = "retrato";
+      var sin = document.createElement("span"); sin.className = "sin-img"; sin.textContent = "Ilustración pendiente";
+      var img = document.createElement("img");
+      img.alt = "Ilustración de " + e.nombre.toLowerCase(); img.width = 400; img.height = 400; img.loading = "lazy";
+      if (e.hipotetica) img.className = "busto";
+      img.addEventListener("load", function () { sin.hidden = true; });
+      img.addEventListener("error", function () { img.hidden = true; sin.hidden = false; });
+      ret.appendChild(img); ret.appendChild(sin); sin.hidden = true;
+      img.src = e.img;
+      var h = document.createElement("h3"); h.textContent = e.nombre;
+      var lat = document.createElement("p"); lat.className = "latin"; lat.textContent = e.latin;
+      var ul = document.createElement("ul"); ul.className = "pilotos";
+      var botones = {};
+      PROBLEMAS.forEach(function (p) {
+        var c = e.s[p.id];
+        var li = document.createElement("li");
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", p.nombre + ": " + ESTADO[c.e]);
+        b.title = p.nombre + ": " + ESTADO[c.e];
+        var dot = document.createElement("span"); dot.className = "piloto " + c.e; dot.setAttribute("aria-hidden", "true");
+        b.appendChild(dot);
+        b.addEventListener("click", function () { eligeProblema(p.id); });
+        li.appendChild(b); ul.appendChild(li); botones[p.id] = b;
+      });
+      var sol = document.createElement("p"); sol.className = "sol";
+      var n = PROBLEMAS.filter(function (p) { return e.s[p.id].e === "e1"; }).length;
+      var cuenta = document.createElement("p"); cuenta.className = "cuenta";
+      cuenta.textContent = e.hipotetica ? "Precedentes propios: 0 de 6. Todo prestado." : "Documentado en el expediente: " + n + " de 6.";
+      art.appendChild(ret); art.appendChild(h); art.appendChild(lat); art.appendChild(ul); art.appendChild(sol); art.appendChild(cuenta);
+      esp.appendChild(art);
+      refsComp.push({ e: e, sol: sol, botones: botones });
+    });
+    eligeProblema(probSel);
+  }
+
+  function eligeProblema(id) {
+    probSel = id;
+    var bs = $("problemas").querySelectorAll("button");
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", String(bs[i].getAttribute("data-p") === id));
+    refsComp.forEach(function (r) {
+      var c = r.e.s[id];
+      r.sol.textContent = "";
+      var tag = document.createElement("span"); tag.className = "tag ui"; tag.style.marginLeft = "0";
+      tag.textContent = c.e === "e1" ? "E1" : (c.e === "e3" ? "E3–E4" : "no consta");
+      r.sol.appendChild(tag); r.sol.appendChild(document.createTextNode(" " + c.t));
+      if (c.cita) { var pc = document.createElement("span"); pc.className = "pendiente"; pc.textContent = "por citar"; r.sol.appendChild(document.createTextNode(" ")); r.sol.appendChild(pc); }
+      for (var k in r.botones) r.botones[k].classList.toggle("actual", k === id);
+    });
+  }
+
+  /* ---- Cadena de la hipótesis hormonal (apartado 2.3) ---- */
+  var ESLABONES = [
+    { e: "e2", tag: "E2", t: "Que el estado hormonal produzca diferencias químicas relevantes en la sangre.",
+      x: "Hay diferencias hematológicas reales entre grupos, como la hemoglobina media de hombres y mujeres adultos (8.1). Falta saber cuáles importarían a un hematófago." },
+    { e: "e2", tag: "E2 · contradictoria", t: "Que esas diferencias generen señales detectables desde fuera.",
+      x: "En mosquitos, un trabajo de 2025 ve efecto del ciclo menstrual y un resumen de 2026 apenas lo ve; la identidad individual pesa más. Todo se refiere a la piel y a la atracción, no a la sangre." },
+    { e: "e3", tag: "E3", t: "Que el hematófago tenga receptores capaces de distinguirlas.",
+      x: "Los hematófagos reales detectan calor, CO₂ y volátiles. Que uno distinga perfiles hormonales es plausible, pero nadie lo ha comprobado. Aquí se rompe la cadena." },
+    { e: "e4", tag: "E4", t: "Que su sistema nervioso las interprete siempre igual.", x: "Sin evidencia." },
+    { e: "e4", tag: "E4", t: "Que esa interpretación produzca una preferencia alimentaria.",
+      x: "Sin evidencia. El expediente lo clasifica como especulación narrativa." }
+  ];
+  var CX = [110, 290, 530, 710, 890];
+  var esSel = 3;
+
+  function construyeCadena() {
+    var s = $("svg-cadena");
+    mk("path", { "class": "grieta", d: "M404 46 L416 62 L404 78 L416 94 L404 110" }, s);
+    var r = mk("text", { "class": "rotura", x: 410, y: 22 }, s); r.textContent = "aquí se rompe";
+    ESLABONES.forEach(function (es, i) {
+      var g = mk("g", { "class": "eslabon " + es.e, role: "button", tabindex: 0, "data-i": i + 1,
+        "aria-label": "Eslabón " + (i + 1) + ", " + es.tag + ": " + es.t }, s);
+      mk("ellipse", { "class": "anillo", cx: CX[i], cy: 78, rx: 100, ry: i % 2 ? 30 : 46 }, g);
+      mk("circle", { "class": "num-c", cx: CX[i], cy: 78, r: 22 }, g);
+      var t = mk("text", { "class": "num-t", x: CX[i], y: 78 }, g); t.textContent = i + 1;
+      g.addEventListener("click", function () { eligeEslabon(i + 1); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); eligeEslabon(i + 1); } });
+    });
+    eligeEslabon(esSel);
+  }
+  function eligeEslabon(n) {
+    esSel = n;
+    var es = ESLABONES[n - 1];
+    $("es-titulo").textContent = "Eslabón " + n + " · " + es.tag + ". " + es.t;
+    $("es-texto").textContent = es.x;
+    var gs = document.querySelectorAll("#svg-cadena .eslabon");
+    for (var i = 0; i < gs.length; i++) gs[i].classList.toggle("sel", +gs[i].getAttribute("data-i") === n);
+  }
+
+  /* ---- Mapa de lagunas: factor × nivel (A composición, B señal, C sabor) ---- */
+  var LAG = function (t) { return ["laguna", t || "No se localizó ningún estudio."]; };
+  var FACTORES = [
+    { f: "Variación individual", a: LAG("No se midió la composición de la sangre."),
+      b: ["e2", "La identidad individual explicó hasta el 64 % de la varianza de los volátiles del pie y el 59 % de los del brazo, con Anopheles gambiae (resumen de congreso de 2026, muestra pequeña)."], c: LAG() },
+    { f: "Nutrición e hidratación", a: LAG(), b: LAG(), c: LAG() },
+    { f: "Edad", a: ["e1", "Los valores de referencia de hemoglobina dependen de la edad, sobre todo en la infancia (8.1)."], b: LAG(), c: LAG() },
+    { f: "Sexo biológico", a: ["e1", "En promedio, los hombres adultos tienen más hemoglobina que las mujeres adultas (8.1)."],
+      b: ["e2", "Un trabajo con Anopheles gambiae no halló diferencias de atracción entre hombres y mujeres (resumen de congreso)."], c: LAG() },
+    { f: "Estado hormonal", a: LAG("No se localizaron diferencias químicas de la sangre ligadas al estado hormonal que importen a un hematófago."),
+      b: ["contra", "Un trabajo de 2025 encuentra que el ciclo menstrual influye en la atracción de mosquitos y un resumen de 2026 apenas ve efecto. Una nota de la SLU recuerda que embarazadas llegaron a atraer el doble de Anopheles. Todo es piel y atracción, no sangre."], c: LAG() },
+    { f: "Estrés y actividad", a: LAG(), b: LAG(), c: LAG() },
+    { f: "Medicación y enfermedad", a: LAG("No se localizaron trabajos sobre fármacos concretos."),
+      b: ["e1", "Algunas enfermedades cambian los compuestos del aliento, el sudor o la piel, y perros y otros sistemas los detectan (10.2)."], c: LAG() }
+  ];
+  var NIVELES = [["a", "A · Composición"], ["b", "B · Señal"], ["c", "C · Sabor"]];
+  var ETIQ = { e1: "E1 · directa", e2: "E2 · indirecta", contra: "Contradictoria", laguna: "Laguna" };
+  var ETIQ_CORTO = { e1: "E1", e2: "E2", contra: "Contra.", laguna: "Laguna" };
+
+  function construyeMapa() {
+    var tb = $("mapa").querySelector("tbody");
+    FACTORES.forEach(function (fa) {
+      var tr = document.createElement("tr");
+      var th = document.createElement("th"); th.scope = "row"; th.textContent = fa.f; tr.appendChild(th);
+      NIVELES.forEach(function (nv) {
+        var c = fa[nv[0]];
+        var td = document.createElement("td");
+        var b = document.createElement("button"); b.type = "button"; b.className = "c-" + c[0];
+        var sp = document.createElement("span"); sp.className = "largo"; sp.textContent = ETIQ[c[0]]; b.appendChild(sp);
+        var sc = document.createElement("span"); sc.className = "corto"; sc.textContent = ETIQ_CORTO[c[0]]; b.appendChild(sc);
+        b.setAttribute("aria-label", fa.f + ", " + nv[1] + ": " + ETIQ[c[0]]);
+        b.addEventListener("click", function () {
+          var prev = $("mapa").querySelector("button.sel"); if (prev) prev.classList.remove("sel");
+          b.classList.add("sel");
+          $("mapa-txt").textContent = fa.f + " · " + nv[1] + ": " + ETIQ[c[0]] + ". " + c[1];
+        });
+        td.appendChild(b); tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    var cuenta = NIVELES.map(function (nv) {
+      return nv[1].split(" · ")[1] + ", " + FACTORES.filter(function (fa) { return fa[nv[0]][0] !== "laguna"; }).length + " de " + FACTORES.length;
+    });
+    $("mapa-txt").textContent = "Factores con algún estudio localizado: " + cuenta.join("; ") + ".";
+  }
+
+  dibujaCuerpo();
+  construyeComparador();
+  construyeCadena();
+  construyeMapa();
+  update();
+})();
+</script>
+</body>
+</html>
