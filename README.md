@@ -4,7 +4,7 @@
 
 Este repositorio es la sede de la IAET: un sitio estático publicado con GitHub Pages, sin paso de compilación. Aloja los proyectos pequeños que no justifican un repositorio propio, ordenados por divisiones, y enlaza los que sí lo tienen.
 
-**Sede publicada:** <https://v0raonline.github.io/iaet/> *(activa cuando GitHub Pages esté habilitado en el repositorio, desde la rama `main` y la raíz)*.
+**Sede publicada:** <https://v0raonline.github.io/iaet/>
 
 ## Organigrama
 

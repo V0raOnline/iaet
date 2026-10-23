@@ -1,5 +1,6 @@
-# Borradores: no se publican
+# Borradores y documentación interna: no se publican
 borradores/
+interno/
 
 # Sistema operativo
 .DS_Store
