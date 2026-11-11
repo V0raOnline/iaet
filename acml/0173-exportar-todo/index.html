@@ -1,0 +1,253 @@
+<!doctype html>
+<!--
+  IAET  ·  https://v0raonline.github.io/iaet/
+  Copyright (c) 2026 V0ra (v0raonline)
+  Licencia CC BY-NC-SA 4.0 — sin fines comerciales. https://creativecommons.org/licenses/by-nc-sa/4.0/
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="V0ra (V0raOnline)">
+<meta name="copyright" content="Copyright (c) 2026 V0ra (v0raonline)">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<title>Auditoría de exports: ChatGPT, Grok, Copilot — IAET</title>
+<meta name="description" content="Qué entregan de verdad ChatGPT, Grok, Copilot, Suno, Flow Music, Claude y Substack al pedir tus datos por la vía oficial, y qué falta.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IAET · Interfaz de Asimilación de Experiencias Tecnológicas">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://v0raonline.github.io/iaet/acml/0173-exportar-todo/">
+<meta property="og:title" content="Tienes derecho a exportar todo · Expediente ACML-0173">
+<meta property="og:description" content="Pulsé el botón de exportar en siete servicios. Lo que falta, lo que contestan y cuánto les queda de plazo.">
+<meta property="og:image" content="https://v0raonline.github.io/iaet/comun/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Emblema de la IAET junto al lema «Estudios serios y otros que nadie pidió»">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../comun/emblemas/iaet.webp" type="image/webp">
+<link rel="stylesheet" href="../../comun/iaet.css">
+<style>
+  /* Semáforo de estado. Siempre como etiqueta con texto: el color solo no basta. [V0-iaet 0ad8ba8b-239b-4476-9661-8b0e80f26230] */
+  :root {
+    --sem-rojo: #7f2a1d;   /* reclamación abierta o export vacío */
+    --sem-verde: #2f5236;  /* cumple */
+  }
+
+  .totales { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; }
+  @media (min-width: 560px) { .totales { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+  .stat .n { font-size: 30px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .stat .l { color: var(--muted); }
+
+  .sem { display: inline-block; padding: 1px 8px; border-radius: 4px; font: 12px system-ui, sans-serif; white-space: nowrap; }
+  .sem-rojo { background: var(--sem-rojo); color: var(--plate); }
+  .sem-ambar { background: var(--warn); color: var(--fg); }
+  .sem-verde { background: var(--sem-verde); color: var(--plate); }
+  .sem-gris { background: var(--accent-soft); color: var(--fg); }
+
+  .fichas.dos { grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .fichas.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .ficha dl { margin: 8px 0 0; display: grid; gap: 6px; }
+  .ficha dt { color: var(--muted); font: 11px system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+  .ficha dd { margin: 0; overflow-wrap: anywhere; }
+  .cabeza-ficha { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; justify-content: space-between; }
+
+  .lista { list-style: none; margin: 0; padding: 0; }
+  .lista li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .lista li:first-child { border-top: 0; }
+  .lista .f { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .lista .t { min-width: 0; overflow-wrap: anywhere; }
+  .lista .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 2px; }
+  .chip { display: inline-block; padding: 0 6px; border-radius: 4px; border: 1px solid var(--line); background: var(--plate); color: var(--fg); font: 12px system-ui, sans-serif; }
+  .chip-aviso { background: var(--warn); border-color: var(--warn); }
+  .filtro { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 8px; }
+
+  .cuenta { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .vacio:empty::before { content: "Sin registros. Visado ACML: conforme, de momento."; color: var(--muted); font-style: italic; }
+  blockquote { margin: 4px 0; padding-left: 10px; border-left: 3px solid var(--accent); font-style: italic; }
+  @media (max-width: 420px) { .lista li { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav class="barra-inst ui" aria-label="Navegación institucional">
+  <div class="dentro">
+    <a class="marca" href="../../">
+      <img src="../../comun/emblemas/iaet.webp" alt="" width="36" height="36">
+      <strong>IAET</strong>
+      <span>Interfaz de Asimilación de Experiencias Tecnológicas</span>
+    </a>
+    <ul class="nav-inst">
+      <li><a href="../../#divisiones">Divisiones</a></li>
+      <li><a href="../">División ACML</a></li>
+      <li><a href="../../#expedientes-recientes">Publicaciones</a></li>
+      <li><span class="muerto" title="Portal en trámite de transparencia. Plazo de respuesta: un mes, ampliable a nunca.">Transparencia</span></li>
+      <li><span class="muerto" title="Cita previa obligatoria. No hay citas.">Sede electrónica</span></li>
+    </ul>
+  </div>
+</nav>
+<main>
+
+  <header>
+    <div class="cabecera">
+      <div>
+        <p class="kicker ui">IAET · División ACML · Expediente ACML-0173 · Registro de seguimiento</p>
+        <h1>Tienes derecho a exportar todo, salvo lo que falte</h1>
+        <p class="sub">Qué entrega de verdad cada proveedor cuando pides tus datos, y qué responde cuando le dices que falta algo.</p>
+      </div>
+      <img class="emblema" src="../../comun/emblemas/iaet.webp" width="280" height="274" alt="Emblema de la IAET: casco de astronauta con una galaxia en el visor, entre laureles">
+    </div>
+    <p class="org ui"><strong class="org-nombre">Interfaz de Asimilación de Experiencias Tecnológicas · División de Auditorías Con Mala Leche.</strong>
+      Clasificación: en curso. Distribución: libre, con acuse de recibo pendiente.</p>
+    <dl class="metadatos ui">
+      <div><dt>Publicación</dt><dd>11 de noviembre de 2026</dd></div>
+      <div><dt>Actualizado</dt><dd id="m-actualizado"></dd></div>
+      <div><dt>Versión</dt><dd>1.0 · se actualiza mientras corran los plazos</dd></div>
+      <div><dt>Responsable</dt><dd>V0ra</dd></div>
+      <div><dt>Estado</dt><dd>Plazos corriendo</dd></div>
+      <div><dt>Tipo</dt><dd>Estudio</dd></div>
+      <div><dt>Artículo</dt><dd><a href="https://v0raonline.substack.com/p/tienes-derecho-a-exportar-todo-salvo">Parte I, «El botón»: leer en Substack ↗</a></dd></div>
+    </dl>
+    <p class="aviso-base ui">Una sola cuenta, la de la autora, con miles de imágenes, cientos de canciones y muchas conversaciones. Los exports se pidieron por las vías oficiales y se analizaron en local, en solo lectura. Las lecturas legales son propias, no asesoría jurídica.</p>
+  </header>
+
+  <section class="card" aria-labelledby="h-resumen">
+    <h2 id="h-resumen">Resumen <span class="tag ui">0</span></h2>
+    <div class="totales ui" id="totales"></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-matriz">
+    <h2 id="h-matriz">Matriz de proveedores <span class="tag ui">1</span></h2>
+    <p class="desc ui">Una ficha por proveedor: por dónde se pide el export, qué trae y qué no.</p>
+    <ul class="fichas dos ui" id="matriz"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="h-plazos">
+    <h2 id="h-plazos">Plazos <span class="tag ui">2</span></h2>
+    <p class="desc ui">Un mes para contestar desde cada solicitud (art. 12.3 RGPD).</p>
+    <ul class="lista ui vacio" id="plazos"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="h-crono">
+    <h2 id="h-crono">Cronología <span class="tag ui">3</span></h2>
+    <div class="filtro ui">
+      <label for="f-prov">Proveedor</label>
+      <select id="f-prov"><option value="">Todos</option></select>
+    </div>
+    <ul class="lista ui vacio" id="cronologia" aria-live="polite"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="h-pruebas">
+    <h2 id="h-pruebas">Pruebas <span class="tag ui">4</span></h2>
+    <p class="desc ui">Qué demuestra cada una. Las que llevan datos de la cuenta se publican cuando estén recortadas.</p>
+    <ul class="lista ui vacio" id="pruebas"></ul>
+  </section>
+
+  <section class="card" aria-labelledby="h-terminos">
+    <h2 id="h-terminos">Términos y artículos <span class="tag ui">5</span></h2>
+    <p class="desc ui">Lo que prohíben los términos de uso de cada proveedor y el artículo del RGPD que aplica. Lectura propia, no asesoría legal.</p>
+    <ul class="lista ui vacio" id="terminos"></ul>
+  </section>
+
+  <footer class="pie ui">
+    <p><strong>Registro de seguimiento del expediente ACML-0173.</strong> Acompaña al artículo
+      <a href="https://v0raonline.substack.com/p/tienes-derecho-a-exportar-todo-salvo">«Tienes derecho a exportar todo, salvo lo que falte (I): El botón»</a>, publicado en Substack.
+      Las cifras son recuentos de los exports oficiales de una sola cuenta, hechos en local con scripts de solo lectura, y su cruce con lo que muestra la galería de cada servicio. Nada está estimado. Las fechas de los términos son las de la versión consultada.</p>
+    <p>Fuentes: los exports de cada proveedor, sus términos de uso, sus políticas de privacidad y sus páginas de ayuda, en las versiones citadas; el Reglamento (UE) 2016/679 (RGPD), artículos 12, 15, 17, 20 y 25.</p>
+    <p class="nota-marcas">ChatGPT y OpenAI, Grok y xAI, Copilot y Microsoft, Suno, Flow Music y Google, Claude y Anthropic, y Substack son marcas de sus titulares. Este expediente es un estudio independiente sin ánimo de lucro, sin afiliación con ninguno de ellos ni respaldo suyo.</p>
+    <p>Edita la Interfaz de Asimilación de Experiencias Tecnológicas (IAET), División de Auditorías Con Mala Leche (ACML). No intente encontrarnos; ellos tampoco nos contestan.</p>
+    <div class="citar">
+      <h3>Cómo citar este documento</h3>
+      <p id="cita">IAET-ACML (2026). <em>Tienes derecho a exportar todo, salvo lo que falte</em>. Expediente ACML-0173, versión 1.0. Registro de seguimiento. Interfaz de Asimilación de Experiencias Tecnológicas, División de Auditorías Con Mala Leche. https://v0raonline.github.io/iaet/acml/0173-exportar-todo/</p>
+      <button type="button" id="copiar-cita">Copiar cita</button>
+    </div>
+  </footer>
+
+</main>
+<footer class="pie-legal ui">
+  <div class="dentro">
+    <ul class="nav-inst">
+      <li><span class="muerto" title="Redactado por la Comisión Permanente de Asuntos Irrelevantes. Pendiente de lectura.">Aviso legal</span></li>
+      <li><span class="muerto" title="Accesible para todo el mundo salvo para quien lleve casco">Accesibilidad</span></li>
+      <li><span class="muerto" title="Esta página no usa cookies. Ni galletas.">Política de cookies</span></li>
+      <li><span class="muerto" title="Buzón cerrado por falta de quejas">Contacto</span></li>
+    </ul>
+    <p>© 2026 IAET · División ACML. No intente encontrarnos.</p>
+  </div>
+</footer>
+<!-- datos.js se genera desde el seguimiento interno y solo trae lo publicable: no editarlo a mano. -->
+<script src="datos.js"></script>
+<script>
+(() => {
+  const M = window.MISION;
+  const SEM = { rojo: "sem-rojo", ambar: "sem-ambar", verde: "sem-verde", gris: "sem-gris" };
+  const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const nombre = Object.fromEntries(M.proveedores.map(p => [p.id, p.nombre]));
+  const SIN = "Sin comprobar";
+
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const enLetra = iso => { if (!iso) return "—"; const [a, m, d] = iso.split("-").map(Number); return d + " de " + MESES[m - 1] + " de " + a; };
+  // Días hasta una fecha, contados en fechas locales para que el cambio de hora no reste uno. [V0-iaet 0ad8ba8b-239b-4476-9661-8b0e80f26230]
+  const dias = iso => { const [a, m, d] = iso.split("-").map(Number); const hoy = new Date(); const h = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    return Math.round((new Date(a, m - 1, d) - h) / 86400000); };
+
+  function pintar() {
+    document.getElementById("m-actualizado").textContent = enLetra(M.actualizado);
+
+    // Incompleto es todo lo comprobado que no está en verde: el ámbar también tiene su hueco.
+    const comprobados = M.proveedores.filter(p => p.falta !== SIN);
+    const incompletos = comprobados.filter(p => p.estado !== "verde").length;
+    const pendientes = M.proveedores.filter(p => p.falta === SIN).map(p => p.nombre.split(" ")[0]);
+    const abiertos = M.plazos.map(p => dias(p.vence)).filter(d => d >= 0).sort((a, b) => a - b);
+    document.getElementById("totales").innerHTML =
+      '<div class="stat"><div class="n">' + incompletos + " de " + comprobados.length + '</div><div class="l">exports comprobados llegan incompletos' +
+        (pendientes.length ? " (" + esc(pendientes.join(", ")) + ", pendiente)" : "") + "</div></div>" +
+      '<div class="stat"><div class="n">' + (abiertos.length ? abiertos[0] + " días" : "—") + '</div><div class="l">hasta el próximo plazo</div></div>' +
+      '<div class="stat"><div class="n">' + abiertos.length + '</div><div class="l">solicitudes formales en plazo</div></div>';
+
+    document.getElementById("matriz").innerHTML = M.proveedores.map(p =>
+      '<li class="ficha"><div class="cabeza-ficha"><h3>' + esc(p.nombre) + '</h3><span class="sem ' + SEM[p.estado] + '">' + esc(p.estadoTexto) + "</span></div>" +
+      "<dl><div><dt>Vía oficial</dt><dd>" + esc(p.via) + "</dd></div>" +
+      "<div><dt>Formato</dt><dd>" + esc(p.formato) + "</dd></div>" +
+      "<div><dt>Qué trae</dt><dd>" + esc(p.trae) + "</dd></div>" +
+      "<div><dt>Qué falta</dt><dd>" + esc(p.falta) + "</dd></div>" +
+      "<div><dt>Último export analizado</dt><dd>" + enLetra(p.ultimoExport) + "</dd></div></dl></li>").join("");
+
+    document.getElementById("plazos").innerHTML = M.plazos.slice().sort((a, b) => a.vence.localeCompare(b.vence)).map(p => {
+      const d = dias(p.vence);
+      const cuenta = d > 0 ? "quedan " + d + " días" : d === 0 ? "vence hoy" : "vencido hace " + (-d) + " días";
+      return '<li><span class="f">' + esc(p.vence) + '</span><span class="t"><strong>' + esc(nombre[p.prov]) + "</strong> · " + esc(p.base) +
+        " (desde el " + enLetra(p.desde) + ')<span class="meta"><span class="chip' + (d <= 7 ? " chip-aviso" : "") + '"><span class="cuenta">' + cuenta + "</span></span></span></span></li>";
+    }).join("");
+
+    const fp = document.getElementById("f-prov").value;
+    const TIPO = { hallazgo: "hallazgo", envio: "enviado", respuesta: "respuesta" };
+    // Más reciente arriba; dentro del mismo día, el último apuntado primero.
+    document.getElementById("cronologia").innerHTML = M.eventos.map((e, i) => [e, i]).filter(([e]) => !fp || e.prov === fp)
+      .sort(([a, i], [b, j]) => b.fecha.localeCompare(a.fecha) || j - i).map(([e]) =>
+      '<li><span class="f">' + esc(e.fecha) + '</span><span class="t">' + esc(e.texto) +
+      '<span class="meta"><span class="chip">' + esc(nombre[e.prov]) + '</span><span class="chip">' + esc(TIPO[e.tipo] || e.tipo) + "</span></span></span></li>").join("");
+
+    document.getElementById("pruebas").innerHTML = M.pruebas.map(p =>
+      '<li><span class="f">' + esc(p.id) + '</span><span class="t"><strong>' + esc(p.titulo) + "</strong><br>" + esc(p.demuestra) +
+      '<span class="meta"><span class="chip">' + esc(nombre[p.prov]) + "</span></span></span></li>").join("");
+
+    document.getElementById("terminos").innerHTML = M.terminos.map(t =>
+      '<li><span class="f">' + esc(nombre[t.prov].split(" ")[0]) + '</span><span class="t"><blockquote>' + esc(t.cita) + "</blockquote>" +
+      esc(t.lectura) + '<span class="meta"><span class="chip">' + esc(t.fecha) + '</span><span class="chip">RGPD: ' + esc(t.articulos) + "</span></span></span></li>").join("");
+  }
+
+  const sel = document.getElementById("f-prov");
+  M.proveedores.forEach(p => sel.add(new Option(p.nombre, p.id)));
+  sel.addEventListener("change", pintar);
+  pintar();
+
+  document.getElementById("copiar-cita").addEventListener("click", (e) => {
+    const boton = e.currentTarget;
+    const texto = document.getElementById("cita").textContent.replace(/\s+/g, " ").trim();
+    const hecho = () => { boton.textContent = "Cita copiada"; setTimeout(() => { boton.textContent = "Copiar cita"; }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(texto).then(hecho, () => {});
+  });
+})();
+</script>
+</body>
+</html>

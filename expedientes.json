@@ -11,9 +11,25 @@
       "nombre": "Física de Mundos Simulados",
       "sigla": "FMS",
       "descripcion": "Estudios en serio sobre la física real que hay detrás de las mecánicas de los videojuegos."
+    },
+    {
+      "slug": "acml",
+      "nombre": "Auditorías Con Mala Leche",
+      "sigla": "ACML",
+      "descripcion": "Auditorías de servicios reales, con datos propios y por las vías oficiales: qué prometen, qué entregan y qué contestan cuando falta algo."
     }
   ],
   "expedientes": [
+    {
+      "id": "ACML-0173",
+      "division": "acml",
+      "titulo": "Tienes derecho a exportar todo, salvo lo que falte",
+      "resumen": "Registro de seguimiento: qué entregan ChatGPT, Grok, Copilot, Suno, Flow Music, Claude y Substack al exportar tus datos por la vía oficial, qué falta y cuánto les queda de plazo para contestar.",
+      "tipo": "estudio",
+      "fecha": "2026-11-11",
+      "url": "acml/0173-exportar-todo/",
+      "externo": false
+    },
     {
       "id": "EQNP-1800/01",
       "division": "eqnp",

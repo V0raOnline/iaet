@@ -12,6 +12,7 @@ Este repositorio es la sede de la IAET: un sitio estático publicado con GitHub 
 |---|---|---|---|
 | Estudios Que Nadie Pidió | EQNP | `eqnp/` | Parodia |
 | Física de Mundos Simulados | FMS | `fms/` | Estudio, divulgación |
+| Auditorías Con Mala Leche | ACML | `acml/` | Estudio |
 
 ## Estructura
 
@@ -30,9 +31,14 @@ iaet/
 │   ├── index.html             Página de la División EQNP
 │   ├── 0069-ergonomia-del-deseo/index.html
 │   └── exp1800-01/            Expediente 1800/01: index.html y assets/
-└── fms/
-    └── index.html             Página de la División FMS
+├── fms/
+│   └── index.html             Página de la División FMS
+└── acml/
+    ├── index.html             Página de la División ACML
+    └── 0173-exportar-todo/    Expediente ACML-0173: index.html y datos.js
 ```
+
+El `datos.js` del ACML-0173 se genera desde el seguimiento interno, que no se publica, con un script que deja fuera todo lo privado. No se edita a mano.
 
 Para verlo en local (el catálogo se carga con `fetch`, así que abrir los archivos directamente desde el disco no basta):
 
@@ -107,6 +113,7 @@ Titulares citados hasta la fecha:
 |---|---|---|
 | *Star Wars* (Stormtrooper y marcas relacionadas) | Lucasfilm Ltd. / The Walt Disney Company | EQNP-0069 |
 | *Portal* | Valve Corporation | FMS-0001 (externo) |
+| ChatGPT, Grok, Copilot, Suno, Flow Music, Claude y Substack (servicios auditados) | OpenAI, xAI, Microsoft, Suno, Google, Anthropic y Substack | ACML-0173 |
 
 Al añadir un expediente que cite una obra nueva, sumar su fila a esta tabla y poner la nota de no afiliación en el pie del expediente, nombrando al titular (ver la plantilla).
 
