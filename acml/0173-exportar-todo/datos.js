@@ -316,6 +316,18 @@ window.MISION = {
       "prov": "substack",
       "tipo": "envio",
       "texto": "Solicitud RGPD enviada por correo al equipo de privacidad, con copia a su representante en la UE: pide las notas, los comentarios y las imágenes subidas (arts. 15.3 y 20) y cuánto tiempo conservan lo borrado (art. 15)"
+    },
+    {
+      "fecha": "2026-11-11",
+      "prov": "substack",
+      "tipo": "respuesta",
+      "texto": "Acuse automático del equipo «Standards & Enforcement»: el buzón de privacidad lo lleva moderación. Sin número de caso"
+    },
+    {
+      "fecha": "2026-11-12",
+      "prov": "chatgpt",
+      "tipo": "respuesta",
+      "texto": "Respuesta: han lanzado ellos un export nuevo desde el Privacy Portal («a few days»). No contesta ni al DPO ni al inventario pedidos"
     }
   ],
   "pruebas": [
