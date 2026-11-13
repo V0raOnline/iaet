@@ -14,10 +14,10 @@ window.MISION = {
       "via": "Export desde Ajustes y Privacy Portal (privacy.openai.com)",
       "formato": "ZIP con zips anidados: conversaciones en JSON, ficheros .dat por file_id",
       "trae": "Conversaciones, adjuntos subidos y parte de las imágenes generadas",
-      "falta": "173 imágenes generadas que la galería sí muestra (171 de ellas en Proyectos). Ningún mensaje de la herramienta de imagen en todo el export",
+      "falta": "173 imágenes generadas que la galería sí muestra (171 de ellas en Proyectos), también en el export que lanzaron ellos tras recibir el listado. Ningún mensaje de herramientas: ni imagen, ni búsqueda, ni ninguna otra",
       "estado": "rojo",
       "estadoTexto": "Reclamación abierta",
-      "ultimoExport": "2026-11-08"
+      "ultimoExport": "2026-11-13"
     },
     {
       "id": "grok",
@@ -328,6 +328,18 @@ window.MISION = {
       "prov": "chatgpt",
       "tipo": "respuesta",
       "texto": "Respuesta: han lanzado ellos un export nuevo desde el Privacy Portal («a few days»). No contesta ni al DPO ni al inventario pedidos"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "Llega el export que lanzaron ellos: faltan las mismas 173, 171 de Proyectos. Solo añade lo de los últimos cinco días (21 conversaciones, 86 ficheros)"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "Ninguno de los dos exports trae un solo mensaje de herramientas: solo usuario y asistente. Fuera la imagen, la búsqueda web y el resto. De las 173, en 94 conversaciones falta hasta el mensaje que la generó"
     }
   ],
   "pruebas": [
