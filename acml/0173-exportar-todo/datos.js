@@ -369,7 +369,7 @@ window.MISION = {
       "fecha": "2026-11-13",
       "prov": "chatgpt",
       "tipo": "hallazgo",
-      "texto": "La galería /images ya no deja explorar las generaciones: la única vista que listaba lo que falta en el export"
+      "texto": "Dos vistas de OpenAI que no coinciden: la imagen de prueba del proyecto «Solo proyecto» aparece en «Mis imágenes» (/images) y no en la biblioteca. El export sigue a la biblioteca"
     }
   ],
   "pruebas": [
