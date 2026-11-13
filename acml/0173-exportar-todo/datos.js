@@ -356,6 +356,12 @@ window.MISION = {
     {
       "fecha": "2026-11-13",
       "prov": "chatgpt",
+      "tipo": "envio",
+      "texto": "Cuarta réplica enviada: el export que lanzaron sigue incompleto, con la causa y los pasos para reproducirlo. Pide de nuevo las imágenes, el inventario, si es una limitación conocida y desde cuándo, y pasar el caso al DPO"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
       "tipo": "hallazgo",
       "texto": "Reproducido: la misma petición en un chat normal, en un proyecto con memoria normal y en un proyecto «Solo proyecto». Las dos primeras imágenes aparecen en la biblioteca; la del proyecto «Solo proyecto», no"
     },
