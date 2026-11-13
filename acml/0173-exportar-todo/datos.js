@@ -340,6 +340,36 @@ window.MISION = {
       "prov": "chatgpt",
       "tipo": "hallazgo",
       "texto": "Ninguno de los dos exports trae un solo mensaje de herramientas: solo usuario y asistente. Fuera la imagen, la búsqueda web y el resto. De las 173, en 94 conversaciones falta hasta el mensaje que la generó"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "Por qué faltan: el export saca las imágenes de la biblioteca y de los adjuntos de los mensajes que conserva. Ninguna de las 173 está en la biblioteca, y su mensaje (el de la herramienta) no viaja"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "La causa: en los proyectos con memoria «Solo proyecto», el acceso a la Biblioteca está deshabilitado y no se puede activar. Lo que se genera ahí no entra en la biblioteca, y por tanto tampoco en el export. Nada lo avisa. Los seis proyectos donde se pierden imágenes tienen ese ajuste: 167 de las 173. En el resto de proyectos se pierden 4 de 70; fuera de proyectos, 2 de 448"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "Reproducido: la misma petición en un chat normal, en un proyecto con memoria normal y en un proyecto «Solo proyecto». Las dos primeras imágenes aparecen en la biblioteca; la del proyecto «Solo proyecto», no"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "Segundo hueco, menor: 6 imágenes de chats normales o de proyectos con biblioteca habilitada (marzo a julio). Se ven en el chat, pero el panel «Archivos del chat» dice que no hay ninguno, y el export no trae ni la imagen ni el mensaje que la contenía"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
+      "tipo": "hallazgo",
+      "texto": "La galería /images ya no deja explorar las generaciones: la única vista que listaba lo que falta en el export"
     }
   ],
   "pruebas": [
