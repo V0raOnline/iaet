@@ -356,6 +356,12 @@ window.MISION = {
     {
       "fecha": "2026-11-13",
       "prov": "chatgpt",
+      "tipo": "publicacion",
+      "texto": "Publicado en LinkedIn y en una nota de Substack: la causa, la prueba de los tres cubos y el anuncio de una herramienta para comprobar qué le falta a tu export"
+    },
+    {
+      "fecha": "2026-11-13",
+      "prov": "chatgpt",
       "tipo": "envio",
       "texto": "Cuarta réplica enviada: el export que lanzaron sigue incompleto, con la causa y los pasos para reproducirlo. Pide de nuevo las imágenes, el inventario, si es una limitación conocida y desde cuándo, y pasar el caso al DPO"
     },

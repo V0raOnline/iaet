@@ -220,7 +220,7 @@
     }).join("");
 
     const fp = document.getElementById("f-prov").value;
-    const TIPO = { hallazgo: "hallazgo", envio: "enviado", respuesta: "respuesta" };
+    const TIPO = { hallazgo: "hallazgo", envio: "enviado", respuesta: "respuesta", publicacion: "publicado" };
     // Más reciente arriba; dentro del mismo día, el último apuntado primero.
     document.getElementById("cronologia").innerHTML = M.eventos.map((e, i) => [e, i]).filter(([e]) => !fp || e.prov === fp)
       .sort(([a, i], [b, j]) => b.fecha.localeCompare(a.fecha) || j - i).map(([e]) =>
